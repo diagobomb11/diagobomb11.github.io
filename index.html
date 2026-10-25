@@ -1,24 +1,338 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="NQJS Games developer website">
-  <title>NQJS Games</title>
-  <style>
-    :root { color-scheme: dark; font-family: system-ui, sans-serif; }
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #11131a; color: #f5f7ff; }
-    main { width: min(42rem, calc(100% - 3rem)); text-align: center; }
-    h1 { font-size: clamp(2.5rem, 8vw, 5rem); margin: 0 0 1rem; }
-    p { color: #c8cce0; font-size: 1.1rem; }
-    a { color: #ffcc42; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NQJS Games</title>
+<meta name="description" content="NQJS Games makes Euchre, Garbage, Rocket Rugby and You Will Fail for iPhone, iPad and Android.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a dark card-table; each game is a dealt playing card with corner indices, art beside it. Single deliberate dark look. */
+:root {
+  --felt: #0d1a14;        /* page: deep table felt */
+  --felt-2: #13261d;      /* raised surfaces */
+  --rail: #1d3a2c;        /* borders, table rail */
+  --brass: #d8b45a;       /* accent: brass trim, like the games' gold */
+  --chalk: #efeadf;       /* main text */
+  --chalk-dim: #a9b3a8;   /* secondary text */
+  --suit-red: #e0705f;    /* hearts/diamonds pips */
+  --display: "Alfa Slab One", "Rockwell", "Roboto Slab", Georgia, serif;
+  --body: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { background: var(--felt); }
+body {
+  margin: 0;
+  background: var(--felt);
+  background-image:
+    radial-gradient(ellipse 90% 60% at 50% -10%, color-mix(in srgb, var(--rail) 70%, transparent), transparent 70%);
+  color: var(--chalk);
+  font: 400 1rem/1.6 var(--body);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--brass); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; border-radius: 6px; }
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* ---------- Header ---------- */
+.top { padding-block: 22px 0; }
+.top nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.mark { font: 400 1.25rem/1 var(--display); color: var(--chalk); text-decoration: none; letter-spacing: .02em; }
+.mark span { color: var(--brass); }
+.top ul { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; font-weight: 600; font-size: .95rem; }
+.top ul a { color: var(--chalk-dim); text-decoration: none; }
+.top ul a:hover { color: var(--chalk); }
+
+.hero { padding-block: 56px 40px; display: grid; gap: 18px; }
+.hero > * { max-width: 760px; }
+.eyebrow { font-size: .78rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--brass); margin: 0; }
+.hero h1 {
+  font: 400 clamp(2.3rem, 6.4vw, 4.2rem)/1.04 var(--display);
+  margin: 0; text-wrap: balance; letter-spacing: .005em;
+}
+.hero h1 em { font-style: normal; color: var(--brass); }
+.hero p { margin: 0; color: var(--chalk-dim); font-size: 1.12rem; max-width: 58ch; }
+.suits { display: flex; gap: 14px; font-size: 1.3rem; color: var(--chalk-dim); margin-top: 6px; }
+.suits .r { color: var(--suit-red); }
+
+/* ---------- Games: dealt cards ---------- */
+.games { display: grid; gap: 34px; padding-block: 8px 56px; }
+.game {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 28px;
+  align-items: center;
+}
+.game:nth-child(even) .card { order: 2; }
+.card {
+  position: relative;
+  background: var(--felt-2);
+  border: 1px solid var(--rail);
+  border-radius: 18px;
+  padding: 30px 30px 28px;
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  box-shadow: 0 18px 40px -24px #000;
+}
+.card::after { /* brass inner pinline, like a card's printed border */
+  content: ""; position: absolute; inset: 7px; border: 1px solid color-mix(in srgb, var(--brass) 28%, transparent);
+  border-radius: 13px; pointer-events: none;
+}
+.idx { position: absolute; font: 400 1rem/0.95 var(--display); color: var(--brass); text-align: center; }
+.idx b { display: block; font-family: var(--body); font-weight: 700; font-size: 1rem; }
+.idx.tl { top: 16px; left: 18px; }
+.idx.br { bottom: 16px; right: 18px; transform: rotate(180deg); }
+.idx.red, .idx.red b { color: var(--suit-red); }
+.head { display: flex; align-items: center; gap: 16px; padding-left: 26px; }
+.head img { width: 76px; height: 76px; border-radius: 18px; flex: none; box-shadow: 0 6px 16px -6px #000; }
+.head h2 { font: 400 clamp(1.5rem, 3.2vw, 2rem)/1.08 var(--display); margin: 0; text-wrap: balance; }
+.head .kind { margin: 4px 0 0; font-size: .8rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--chalk-dim); }
+.pitch { margin: 0; font-size: 1.05rem; max-width: 52ch; }
+.facts { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.facts li {
+  font-size: .85rem; font-weight: 600; color: var(--chalk);
+  border: 1px solid var(--rail); background: var(--felt); padding: 5px 11px; border-radius: 999px;
+}
+.stores { display: flex; flex-wrap: wrap; gap: 10px; padding-right: 26px; }
+.store {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 10px 16px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: .95rem;
+  background: var(--brass); color: var(--felt); border: 1px solid var(--brass);
+  transition: transform .15s ease, background-color .15s ease;
+}
+.store:hover { transform: translateY(-1px); background: color-mix(in srgb, var(--brass) 88%, var(--chalk)); }
+.store.alt { background: transparent; color: var(--chalk); border-color: var(--rail); }
+.store.alt:hover { border-color: var(--brass); background: transparent; }
+.store.soon { background: transparent; color: var(--chalk-dim); border: 1px dashed var(--rail); cursor: default; }
+.store svg { width: 18px; height: 18px; flex: none; }
+
+.shots { display: flex; gap: 14px; justify-content: center; min-width: 0; }
+.shots img {
+  border-radius: 16px; border: 1px solid var(--rail); background: var(--felt-2);
+  box-shadow: 0 20px 40px -22px #000;
+  width: calc(50% - 7px); max-width: 230px; height: auto;
+}
+.shots img:nth-child(2) { transform: translateY(18px) rotate(1.5deg); }
+.shots img:nth-child(1) { transform: rotate(-1.5deg); }
+.shots.wide { flex-direction: column; align-items: stretch; }
+.shots.wide img { width: 100%; max-width: 100%; transform: none; }
+.shots.wide img:nth-child(2) { transform: none; }
+
+/* ---------- Support ---------- */
+.support { border-top: 1px solid var(--rail); padding-block: 48px 30px; display: grid; gap: 22px; }
+.support h2 { font: 400 1.7rem/1.1 var(--display); margin: 0; }
+.support-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.support-grid > div { min-width: 0; }
+.support h3 { margin: 0 0 6px; font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--brass); }
+.support p { margin: 0; color: var(--chalk-dim); }
+.email { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 8px; }
+.email code { font: 600 1rem/1.3 var(--body); color: var(--chalk); user-select: all; word-break: break-all; }
+.copy {
+  font: 600 .85rem/1 var(--body); padding: 8px 12px; border-radius: 9px; cursor: pointer;
+  background: transparent; color: var(--chalk); border: 1px solid var(--rail);
+}
+.copy:hover { border-color: var(--brass); }
+footer { padding-block: 22px 34px; color: var(--chalk-dim); font-size: .88rem; display: flex; flex-wrap: wrap; gap: 8px 22px; justify-content: space-between; }
+footer a { color: var(--chalk-dim); }
+
+@media (max-width: 820px) {
+  .game { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+  .game:nth-child(even) .card { order: 0; }
+  .support-grid { grid-template-columns: minmax(0, 1fr); }
+  .hero { padding-block: 40px 28px; }
+}
+@media (max-width: 420px) {
+  .card { padding: 26px 20px 24px; }
+  .head { padding-left: 22px; }
+  .head img { width: 62px; height: 62px; border-radius: 15px; }
+  .stores { padding-right: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .store { transition: none; }
+  .store:hover { transform: none; }
+}
+</style>
 </head>
 <body>
-  <main>
-    <h1>NQJS Games</h1>
-    <p>Independent games made to challenge, entertain, and surprise.</p>
-    <p><a href="/nqjs-privacy-policy/">Privacy Policy</a></p>
-  </main>
+
+<header class="top wrap">
+  <nav aria-label="Main">
+    <a class="mark" href="#top">NQJS <span>Games</span></a>
+    <ul>
+      <li><a href="#games">Games</a></li>
+      <li><a href="#support">Support</a></li>
+      <li><a href="nqjs-privacy-policy/">Privacy</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="hero wrap">
+    <p class="eyebrow">Independent games for iPhone, iPad &amp; Android</p>
+    <h1>Card-table classics, rugby kicks and a quiz that <em>wants you to fail.</em></h1>
+    <p>NQJS makes small, polished games you can pick up in a minute: the card games families have played for generations, a rugby kicker with real wind and weather, and a six-question brain quiz with no second chances.</p>
+    <div class="suits" aria-hidden="true"><span>♠</span><span class="r">♥</span><span>♣</span><span class="r">♦</span></div>
+  </section>
+
+  <section class="games wrap" id="games" aria-label="Our games">
+
+    <article class="game" id="euchre">
+      <div class="card">
+        <div class="idx tl" aria-hidden="true">E<b>♠</b></div>
+        <div class="idx br" aria-hidden="true">E<b>♠</b></div>
+        <div class="head">
+          <img src="img/euchre-icon.jpg" alt="Euchre app icon" width="76" height="76">
+          <div>
+            <h2>Euchre: Classic &amp; House Rules</h2>
+            <p class="kind">Card game · New</p>
+          </div>
+        </div>
+        <p class="pitch">The Midwest kitchen-table classic. Order it up, go alone and euchre 'em, with the house rules you grew up with switched on.</p>
+        <ul class="facts">
+          <li>Bowers &amp; loners</li><li>Stick the Dealer</li><li>2 or 4 players</li><li>Career: Cornfield to Coinsino</li>
+        </ul>
+        <div class="stores">
+          <a class="store" href="https://apps.apple.com/us/app/id6820276546" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.8-1.1-2.9-4.3zM13.9 5.3c.7-.9 1.2-2 1-3.2-1 0-2.2.7-3 1.5-.6.7-1.2 1.9-1 3.1 1.1.1 2.3-.6 3-1.4z"/></svg>App Store</a>
+          <span class="store soon" title="In review with Google Play"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 2.6v18.8c0 .4.4.6.7.4l10.9-9.4c.3-.2.3-.6 0-.8L4.7 2.2c-.3-.2-.7 0-.7.4zm12.6 7 2.9 1.7c.6.4.6 1.2 0 1.5l-2.9 1.7-2.5-2.4 2.5-2.5z"/></svg>Google Play: coming soon</span>
+        </div>
+      </div>
+      <div class="shots">
+        <img src="img/euchre-1.jpg" alt="Euchre main menu with Play, Career and Daily Missions" width="405" height="720" loading="lazy">
+        <img src="img/euchre-2.jpg" alt="A Euchre hand at the table, deciding whether to order up spades" width="405" height="720" loading="lazy">
+      </div>
+    </article>
+
+    <article class="game" id="garbage">
+      <div class="card">
+        <div class="idx tl red" aria-hidden="true">G<b>♥</b></div>
+        <div class="idx br red" aria-hidden="true">G<b>♥</b></div>
+        <div class="head">
+          <img src="img/garbage-icon.jpg" alt="Garbage app icon" width="76" height="76">
+          <div>
+            <h2>Garbage: Classic Card Game</h2>
+            <p class="kind">Card game</p>
+          </div>
+        </div>
+        <p class="pitch">Also known as Trash or Ten. Race the computer to clear your board from Ace to 10, or go all the way to King in Ultimate Garbage. Jokers are wild.</p>
+        <ul class="facts">
+          <li>Ace to 10 or Ace to King</li><li>Card Quest: 180 stars</li><li>Daily Challenge</li><li>Peek · 2X · Undo</li>
+        </ul>
+        <div class="stores">
+          <a class="store" href="https://apps.apple.com/us/app/id6804512415" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.8-1.1-2.9-4.3zM13.9 5.3c.7-.9 1.2-2 1-3.2-1 0-2.2.7-3 1.5-.6.7-1.2 1.9-1 3.1 1.1.1 2.3-.6 3-1.4z"/></svg>App Store</a>
+          <a class="store alt" href="https://play.google.com/store/apps/details?id=com.nico.garbage" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 2.6v18.8c0 .4.4.6.7.4l10.9-9.4c.3-.2.3-.6 0-.8L4.7 2.2c-.3-.2-.7 0-.7.4zm12.6 7 2.9 1.7c.6.4.6 1.2 0 1.5l-2.9 1.7-2.5-2.4 2.5-2.5z"/></svg>Google Play</a>
+        </div>
+      </div>
+      <div class="shots">
+        <img src="img/garbage-1.jpg" alt="Garbage main menu: Classic, Ultimate, Card Quest and Daily Challenge" width="405" height="720" loading="lazy">
+        <img src="img/garbage-2.jpg" alt="Card Quest map with stages and stars" width="405" height="720" loading="lazy">
+      </div>
+    </article>
+
+    <article class="game" id="rocket-rugby">
+      <div class="card">
+        <div class="idx tl" aria-hidden="true">R<b>♣</b></div>
+        <div class="idx br" aria-hidden="true">R<b>♣</b></div>
+        <div class="head">
+          <img src="img/rugby-icon.jpg" alt="Rocket Rugby app icon" width="76" height="76">
+          <div>
+            <h2>Rocket Rugby: Kick &amp; Run</h2>
+            <p class="kind">Sports</p>
+          </div>
+        </div>
+        <p class="pitch">Read the wind, time three taps and split the posts. Then switch to Run mode and dodge the defence all the way to the try line.</p>
+        <ul class="facts">
+          <li>Three-tap kick meter</li><li>Wind, rain &amp; snow</li><li>Road to the Cup</li><li>Daily Kick</li>
+        </ul>
+        <div class="stores">
+          <a class="store" href="https://apps.apple.com/us/app/id6804029828" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.8-1.1-2.9-4.3zM13.9 5.3c.7-.9 1.2-2 1-3.2-1 0-2.2.7-3 1.5-.6.7-1.2 1.9-1 3.1 1.1.1 2.3-.6 3-1.4z"/></svg>App Store</a>
+          <a class="store alt" href="https://play.google.com/store/apps/details?id=com.nico.rocketrugby" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 2.6v18.8c0 .4.4.6.7.4l10.9-9.4c.3-.2.3-.6 0-.8L4.7 2.2c-.3-.2-.7 0-.7.4zm12.6 7 2.9 1.7c.6.4.6 1.2 0 1.5l-2.9 1.7-2.5-2.4 2.5-2.5z"/></svg>Google Play</a>
+        </div>
+      </div>
+      <div class="shots wide">
+        <img src="img/rugby-2.jpg" alt="Lining up a goal kick between the posts" width="720" height="405" loading="lazy">
+      </div>
+    </article>
+
+    <article class="game" id="you-will-fail">
+      <div class="card">
+        <div class="idx tl red" aria-hidden="true">F<b>♦</b></div>
+        <div class="idx br red" aria-hidden="true">F<b>♦</b></div>
+        <div class="head">
+          <img src="img/fail-icon.jpg" alt="You Will Fail app icon" width="76" height="76">
+          <div>
+            <h2>You Will Fail: Brain Quiz Game</h2>
+            <p class="kind">Trivia</p>
+          </div>
+        </div>
+        <p class="pitch">Six questions, each harder than the last, against the clock. One mistake ends your run. Most people don't make it. Prove us wrong.</p>
+        <ul class="facts">
+          <li>6 questions, no second chances</li><li>Daily run &amp; streaks</li><li>Science, history &amp; more</li>
+        </ul>
+        <div class="stores">
+          <a class="store" href="https://apps.apple.com/us/app/id6804033648" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.8-1.1-2.9-4.3zM13.9 5.3c.7-.9 1.2-2 1-3.2-1 0-2.2.7-3 1.5-.6.7-1.2 1.9-1 3.1 1.1.1 2.3-.6 3-1.4z"/></svg>App Store</a>
+          <a class="store alt" href="https://play.google.com/store/apps/details?id=com.Nico.youwillfail" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 2.6v18.8c0 .4.4.6.7.4l10.9-9.4c.3-.2.3-.6 0-.8L4.7 2.2c-.3-.2-.7 0-.7.4zm12.6 7 2.9 1.7c.6.4.6 1.2 0 1.5l-2.9 1.7-2.5-2.4 2.5-2.5z"/></svg>Google Play</a>
+        </div>
+      </div>
+      <div class="shots">
+        <img src="img/fail-1.jpg" alt="You Will Fail start screen: six questions, one ego" width="405" height="720" loading="lazy">
+        <img src="img/fail-2.jpg" alt="A timed life-science question with six answers" width="405" height="720" loading="lazy">
+      </div>
+    </article>
+
+  </section>
+
+  <section class="support wrap" id="support">
+    <h2>Support</h2>
+    <div class="support-grid">
+      <div>
+        <h3>Get help</h3>
+        <p>Found a bug or have an idea? Email us and say which game and phone you're using.</p>
+        <div class="email"><code id="support-email">NQJS.support@gmail.com</code><button class="copy" id="copy-email" type="button">Copy</button></div>
+      </div>
+      <div>
+        <h3>Your data</h3>
+        <p>No accounts. Your progress stays on your device. Optional ads give in-game rewards. <a href="nqjs-privacy-policy/">Privacy Policy</a> · <a href="nqjs-privacy-policy/terms.html">Terms</a></p>
+      </div>
+      <div>
+        <h3>Like a game?</h3>
+        <p>A quick rating on the App Store or Google Play is the biggest help a small studio can get. Thank you.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <span>© 2026 NQJS Games</span>
+  <span><a href="nqjs-privacy-policy/">Privacy</a> · <a href="nqjs-privacy-policy/terms.html">Terms</a> · <a href="#support">Support</a></span>
+</footer>
+
+<script>
+(function () {
+  var btn = document.getElementById('copy-email');
+  var addr = document.getElementById('support-email');
+  if (!btn || !addr) return;
+  btn.addEventListener('click', function () {
+    var text = addr.textContent.trim();
+    function selectIt() {
+      var r = document.createRange(); r.selectNodeContents(addr);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = 'Selected';
+    }
+    try {
+      navigator.clipboard.writeText(text).then(function () { btn.textContent = 'Copied'; }, selectIt);
+    } catch (e) { selectIt(); }
+    setTimeout(function () { btn.textContent = 'Copy'; }, 2000);
+  });
+})();
+</script>
 </body>
 </html>
