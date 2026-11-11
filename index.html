@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>NQJS Games</title>
-<meta name="description" content="NQJS Games makes Euchre, Garbage, Rocket Rugby and You Will Fail for iPhone, iPad and Android.">
+<meta name="description" content="NQJS Games makes Euchre, Garbage, Rocket Rugby, You Will Fail and Dealer's Choice: Home Poker for iPhone, iPad and Android.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Figtree:wght@400;500;600;700&display=swap">
@@ -126,6 +126,15 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--brass); outline
 .shots.wide { flex-direction: column; align-items: stretch; }
 .shots.wide img { width: 100%; max-width: 100%; transform: none; }
 .shots.wide img:nth-child(2) { transform: none; }
+
+/* ---------- Coming soon ---------- */
+.soon-list { border-top: 1px solid var(--rail); padding-block: 40px 8px; display: grid; gap: 18px; }
+.soon-list h2 { font: 400 1.7rem/1.1 var(--display); margin: 0; }
+.soon-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.soon-grid > div { min-width: 0; border: 1px dashed var(--rail); border-radius: 14px; padding: 18px 20px; }
+.soon-grid h3 { margin: 0 0 6px; font-size: 1.05rem; color: var(--chalk); }
+.soon-grid p { margin: 0; color: var(--chalk-dim); }
+@media (max-width: 820px) { .soon-grid { grid-template-columns: minmax(0, 1fr); } }
 
 /* ---------- Support ---------- */
 .support { border-top: 1px solid var(--rail); padding-block: 48px 30px; display: grid; gap: 22px; }
@@ -288,6 +297,45 @@ footer a { color: var(--chalk-dim); }
       </div>
     </article>
 
+    <article class="game" id="poker">
+      <div class="card">
+        <div class="idx tl" aria-hidden="true">P<b>♠</b></div>
+        <div class="idx br" aria-hidden="true">P<b>♠</b></div>
+        <div class="head">
+          <img src="img/poker-icon.webp" alt="Dealer's Choice: Home Poker app icon" width="76" height="76">
+          <div>
+            <h2>Dealer's Choice: Home Poker</h2>
+            <p class="kind">Card game · New · 18+</p>
+          </div>
+        </div>
+        <p class="pitch">Poker night, and the dealer calls the game. 3-9-3, Stick the Dealer, No Peek, In Between and more kitchen-table classics against friendly computer players. Play money only.</p>
+        <ul class="facts">
+          <li>8 home poker games</li><li>Road to Success</li><li>Daily Missions</li><li>Plays offline</li>
+        </ul>
+        <div class="stores">
+          <a class="store alt" href="https://play.google.com/store/apps/details?id=com.Nico.NicosPokerDealersChoice" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 2.6v18.8c0 .4.4.6.7.4l10.9-9.4c.3-.2.3-.6 0-.8L4.7 2.2c-.3-.2-.7 0-.7.4zm12.6 7 2.9 1.7c.6.4.6 1.2 0 1.5l-2.9 1.7-2.5-2.4 2.5-2.5z"/></svg>Google Play</a>
+          <span class="store soon"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.8-1.1-2.9-4.3zM13.9 5.3c.7-.9 1.2-2 1-3.2-1 0-2.2.7-3 1.5-.6.7-1.2 1.9-1 3.1 1.1.1 2.3-.6 3-1.4z"/></svg>App Store · coming soon</span>
+        </div>
+      </div>
+      <div class="shots wide">
+        <img src="img/poker-1.webp" alt="A hand of 3-9-3 at the poker table, threes and nines wild" width="720" height="360" loading="lazy">
+      </div>
+    </article>
+
+  </section>
+
+  <section class="soon-list wrap" id="coming-soon" aria-label="Coming soon">
+    <h2>Coming soon</h2>
+    <div class="soon-grid">
+      <div>
+        <h3>Word Switch: Letter Puzzle</h3>
+        <p>Change one letter at a time to turn one word into another.</p>
+      </div>
+      <div>
+        <h3>Soccer Juggling: Trick Master</h3>
+        <p>Keep the ball in the air and land the tricks.</p>
+      </div>
+    </div>
   </section>
 
   <section class="support wrap" id="support">
