@@ -3,384 +3,714 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>NQJS Studio</title>
-<meta name="description" content="NQJS Studio makes Euchre, Garbage, Rocket Rugby, You Will Fail and Dealer's Choice: Home Poker for iPhone, iPad and Android.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Figtree:wght@400;500;600;700&display=swap">
+<title>NQJS Studio · Small Games. Big Fun.</title>
+<meta name="description" content="NQJS Studio makes Rocket Rugby, You Will Fail, Garbage, Euchre, Word Switch and Dealer's Choice: Home Poker for iPhone, iPad and Android. Small games, big fun.">
+<meta name="theme-color" content="#0a0f1f">
+<meta property="og:type" content="website">
+<meta property="og:title" content="NQJS Studio · Small Games. Big Fun.">
+<meta property="og:description" content="Quick challenges. Classic favorites. One more round. Mobile games for iPhone, iPad and Android.">
+<meta property="og:url" content="https://diagobomb11.github.io/">
+<meta property="og:image" content="https://diagobomb11.github.io/img/rugby-2.jpg">
+<link rel="preload" href="fonts/lilita-one.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-/* Layout: a dark card-table; each game is a dealt playing card with corner indices, art beside it. Single deliberate dark look. */
+/* NQJS Studio — arcade-publisher look: deep navy base, each game gets its own color world. */
+/* Fonts are hosted with the site (SIL Open Font License, see fonts/) */
+@font-face { font-family: "Lilita One"; src: url(fonts/lilita-one.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Figtree"; src: url(fonts/figtree-400.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Figtree"; src: url(fonts/figtree-600.woff2) format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "Figtree"; src: url(fonts/figtree-700.woff2) format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Figtree"; src: url(fonts/figtree-800.woff2) format("woff2"); font-weight: 800; font-display: swap; }
 :root {
-  --felt: #0d1a14;        /* page: deep table felt */
-  --felt-2: #13261d;      /* raised surfaces */
-  --rail: #1d3a2c;        /* borders, table rail */
-  --brass: #d8b45a;       /* accent: brass trim, like the games' gold */
-  --chalk: #efeadf;       /* main text */
-  --chalk-dim: #a9b3a8;   /* secondary text */
-  --suit-red: #e0705f;    /* hearts/diamonds pips */
-  --display: "Alfa Slab One", "Rockwell", "Roboto Slab", Georgia, serif;
+  --bg: #0a0f1f;
+  --bg-2: #10172c;
+  --line: #222c4a;
+  --ink: #f4f6ff;
+  --ink-dim: #a9b2d3;
+  --sun: #ffc93c;
+  --flame: #ff7a2f;
+  --sky: #35d0ff;
+  --pink: #ff4f9a;
+  --display: "Lilita One", "Arial Rounded MT Bold", "Trebuchet MS", system-ui, sans-serif;
   --body: "Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --radius: 26px;
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
-html { background: var(--felt); }
+html { background: var(--bg); scroll-behavior: smooth; scroll-padding-top: 76px; }
 body {
-  margin: 0;
-  background: var(--felt);
-  background-image:
-    radial-gradient(ellipse 90% 60% at 50% -10%, color-mix(in srgb, var(--rail) 70%, transparent), transparent 70%);
-  color: var(--chalk);
-  font: 400 1rem/1.6 var(--body);
-  -webkit-font-smoothing: antialiased;
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 400 1rem/1.6 var(--body); -webkit-font-smoothing: antialiased; overflow-x: hidden;
 }
-a { color: var(--brass); }
-a:focus-visible, button:focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; border-radius: 6px; }
-.wrap {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
-}
+img { display: block; max-width: 100%; height: auto; }
+a { color: var(--sun); }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; border-radius: 10px; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* ---------- Header ---------- */
-.top { padding-block: 22px 0; }
-.top nav { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-.mark { font: 400 1.25rem/1 var(--display); color: var(--chalk); text-decoration: none; letter-spacing: .02em; }
-.mark span { color: var(--brass); }
-.top ul { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; font-weight: 600; font-size: .95rem; }
-.top ul a { color: var(--chalk-dim); text-decoration: none; }
-.top ul a:hover { color: var(--chalk); }
+.top {
+  position: sticky; top: 0; z-index: 50;
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
+  backdrop-filter: blur(14px) saturate(140%); -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+}
+.top nav { display: flex; align-items: center; justify-content: space-between; gap: 14px; height: 64px; }
+.brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+.brand svg { width: 38px; height: 38px; flex: none; filter: drop-shadow(0 4px 10px rgba(53,208,255,.35)); }
+.brand b { font: 400 1.45rem/1 var(--display); letter-spacing: .02em; }
+.brand small { display: block; font: 800 .58rem/1 var(--body); letter-spacing: .34em; color: var(--ink-dim); margin-top: 3px; }
+.top ul { display: flex; align-items: center; gap: 4px; list-style: none; margin: 0; padding: 0; }
+.top ul a { display: block; padding: 8px 14px; border-radius: 999px; color: var(--ink-dim); text-decoration: none; font-weight: 700; font-size: .95rem; transition: color .2s, background-color .2s; }
+.top ul a:hover { color: var(--ink); background: var(--bg-2); }
+.top ul a.cta { color: #1a1200; background: linear-gradient(135deg, var(--sun), var(--flame)); }
+.top ul a.cta:hover { filter: brightness(1.08); }
+@media (max-width: 640px) { .top ul .hide-sm { display: none; } .top ul a { padding: 8px 11px; font-size: .9rem; } }
 
-.hero { padding-block: 56px 40px; display: grid; gap: 18px; }
-.hero > * { max-width: 760px; }
-.eyebrow { font-size: .78rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--brass); margin: 0; }
-.hero h1 {
-  font: 400 clamp(2.3rem, 6.4vw, 4.2rem)/1.04 var(--display);
-  margin: 0; text-wrap: balance; letter-spacing: .005em;
+/* ---------- Hero ---------- */
+.hero { position: relative; isolation: isolate; overflow: hidden; padding-block: 64px 40px; }
+.hero::before { /* color glows */
+  content: ""; position: absolute; inset: -20% -10% 0; z-index: -2;
+  mask-image: linear-gradient(#000 70%, transparent); -webkit-mask-image: linear-gradient(#000 70%, transparent);
+  background:
+    radial-gradient(40% 50% at 12% 20%, rgba(53,208,255,.28), transparent 70%),
+    radial-gradient(35% 45% at 88% 15%, rgba(255,79,154,.26), transparent 70%),
+    radial-gradient(45% 50% at 70% 90%, rgba(255,201,60,.20), transparent 70%),
+    radial-gradient(40% 40% at 20% 95%, rgba(57,255,122,.14), transparent 70%);
 }
-.hero h1 em { font-style: normal; color: var(--brass); }
-.hero p { margin: 0; color: var(--chalk-dim); font-size: 1.12rem; max-width: 58ch; }
-.suits { display: flex; gap: 14px; font-size: 1.3rem; color: var(--chalk-dim); margin-top: 6px; }
-.suits .r { color: var(--suit-red); }
+.hero::after { /* faint arcade grid */
+  content: ""; position: absolute; inset: 0; z-index: -1; opacity: .35;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(70% 60% at 50% 40%, #000 20%, transparent 75%);
+  -webkit-mask-image: radial-gradient(70% 60% at 50% 40%, #000 20%, transparent 75%);
+}
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 40px; align-items: center; }
+.pill { display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px; border-radius: 999px; font-weight: 700; font-size: .85rem; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); color: var(--ink); }
+.pill i { width: 8px; height: 8px; border-radius: 50%; background: #39ff7a; box-shadow: 0 0 10px #39ff7a; }
+.hero h1 { font: 400 clamp(3rem, 8.4vw, 6.2rem)/.95 var(--display); margin: 20px 0 18px; letter-spacing: .005em; text-shadow: 0 6px 30px rgba(0,0,0,.4); }
+.hero h1 span { display: block; background: linear-gradient(100deg, var(--sun) 10%, var(--flame) 60%, var(--pink)); -webkit-background-clip: text; background-clip: text; color: transparent; padding-bottom: .06em; }
+.hero .lede { font-size: clamp(1.1rem, 2.2vw, 1.3rem); color: var(--ink-dim); margin: 0 0 28px; max-width: 34ch; }
+.hero .lede strong { color: var(--ink); font-weight: 700; }
+.hero-cta { display: flex; flex-wrap: wrap; gap: 12px; }
+.btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 24px; border-radius: 16px; font: 800 1.02rem/1 var(--body); text-decoration: none; border: 0; cursor: pointer; transition: transform .2s ease, box-shadow .2s ease, filter .2s; }
+.btn svg { width: 20px; height: 20px; flex: none; }
+.btn.primary { color: #1a1200; background: linear-gradient(135deg, var(--sun), var(--flame)); box-shadow: 0 12px 30px -10px rgba(255,122,47,.7); }
+.btn.ghost { color: var(--ink); background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.16); }
+.btn:hover { transform: translateY(-2px); }
+.btn.primary:hover { box-shadow: 0 16px 36px -10px rgba(255,122,47,.85); }
+.hero-facts { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 28px 0 0; padding: 0; list-style: none; color: var(--ink-dim); font-weight: 600; font-size: .93rem; }
+.hero-facts li::before { content: "★"; color: var(--sun); margin-right: 7px; }
 
-/* ---------- Games: dealt cards ---------- */
-.games { display: grid; gap: 34px; padding-block: 8px 56px; }
-.game {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-  gap: 28px;
-  align-items: center;
-}
-.game:nth-child(even) .card { order: 2; }
-.card {
-  position: relative;
-  background: var(--felt-2);
-  border: 1px solid var(--rail);
-  border-radius: 18px;
-  padding: 30px 30px 28px;
-  display: grid;
-  gap: 16px;
-  min-width: 0;
-  box-shadow: 0 18px 40px -24px #000;
-}
-.card::after { /* brass inner pinline, like a card's printed border */
-  content: ""; position: absolute; inset: 7px; border: 1px solid color-mix(in srgb, var(--brass) 28%, transparent);
-  border-radius: 13px; pointer-events: none;
-}
-.idx { position: absolute; font: 400 1rem/0.95 var(--display); color: var(--brass); text-align: center; }
-.idx b { display: block; font-family: var(--body); font-weight: 700; font-size: 1rem; }
-.idx.tl { top: 16px; left: 18px; }
-.idx.br { bottom: 16px; right: 18px; transform: rotate(180deg); }
-.idx.red, .idx.red b { color: var(--suit-red); }
-.head { display: flex; align-items: center; gap: 16px; padding-left: 26px; }
-.head img { width: 76px; height: 76px; border-radius: 18px; flex: none; box-shadow: 0 6px 16px -6px #000; }
-.head h2 { font: 400 clamp(1.5rem, 3.2vw, 2rem)/1.08 var(--display); margin: 0; text-wrap: balance; }
-.head .kind { margin: 4px 0 0; font-size: .8rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--chalk-dim); }
-.pitch { margin: 0; font-size: 1.05rem; max-width: 52ch; }
-.facts { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
-.facts li {
-  font-size: .85rem; font-weight: 600; color: var(--chalk);
-  border: 1px solid var(--rail); background: var(--felt); padding: 5px 11px; border-radius: 999px;
-}
-.stores { display: flex; flex-wrap: wrap; gap: 10px; padding-right: 26px; }
-.store {
-  display: inline-flex; align-items: center; gap: 9px;
-  padding: 10px 16px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: .95rem;
-  background: var(--brass); color: var(--felt); border: 1px solid var(--brass);
-  transition: transform .15s ease, background-color .15s ease;
-}
-.store:hover { transform: translateY(-1px); background: color-mix(in srgb, var(--brass) 88%, var(--chalk)); }
-.store.alt { background: transparent; color: var(--chalk); border-color: var(--rail); }
-.store.alt:hover { border-color: var(--brass); background: transparent; }
-.store.soon { background: transparent; color: var(--chalk-dim); border: 1px dashed var(--rail); cursor: default; }
-.store svg { width: 18px; height: 18px; flex: none; }
-.store.yt svg { color: #ff4e45; }
+.stage { position: relative; height: 540px; }
+.stage .ph { position: absolute; width: 210px; top: 50%; left: 50%; }
+.stage .ph:nth-child(1) { transform: translate(-150%, -46%) rotate(-12deg); z-index: 1; }
+.stage .ph:nth-child(2) { transform: translate(-50%, -54%); z-index: 3; width: 236px; }
+.stage .ph:nth-child(3) { transform: translate(50%, -46%) rotate(12deg); z-index: 2; }
+.stage .float { animation: bob 6s ease-in-out infinite; }
+.stage .ph:nth-child(1) .float { animation-delay: -2s; }
+.stage .ph:nth-child(3) .float { animation-delay: -4s; }
+.stage .icon { position: absolute; width: 76px; border-radius: 20px; box-shadow: 0 14px 30px -10px rgba(0,0,0,.8); z-index: 4; animation: bob 7s ease-in-out infinite; }
+.stage .i1 { left: 2%; top: 6%; transform: rotate(-10deg); }
+.stage .i2 { right: 2%; top: 2%; animation-delay: -3s; }
+.stage .i3 { right: 6%; bottom: 4%; animation-delay: -1.5s; }
+.stage .i4 { left: 6%; bottom: 2%; animation-delay: -5s; }
+@keyframes bob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -12px; } }
 
-.shots { display: flex; gap: 14px; justify-content: center; min-width: 0; }
-.shots img {
-  border-radius: 16px; border: 1px solid var(--rail); background: var(--felt-2);
-  box-shadow: 0 20px 40px -22px #000;
-  width: calc(50% - 7px); max-width: 230px; height: auto;
+/* phone frame */
+.phone { position: relative; border-radius: 30px; padding: 7px; background: linear-gradient(145deg, #2b3456, #0d1224); box-shadow: 0 30px 60px -22px rgba(0,0,0,.9), inset 0 0 0 1px rgba(255,255,255,.12); }
+.phone img { border-radius: 24px; width: 100%; aspect-ratio: 9 / 16; object-fit: cover; }
+.phone::before { content: ""; position: absolute; top: 13px; left: 50%; width: 30%; height: 6px; transform: translateX(-50%); border-radius: 6px; background: rgba(0,0,0,.55); z-index: 1; }
+.tablet { border-radius: 24px; padding: 8px; background: linear-gradient(145deg, #2b3456, #0d1224); box-shadow: 0 30px 60px -22px rgba(0,0,0,.9), inset 0 0 0 1px rgba(255,255,255,.12); }
+.tablet img { border-radius: 17px; width: 100%; }
+
+/* ---------- Game picker strip ---------- */
+.picker { padding-block: 10px 30px; }
+.picker ul { list-style: none; margin: 0; padding: 4px 2px 10px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; }
+.picker a { display: grid; justify-items: center; gap: 9px; padding: 16px 8px 14px; border-radius: 22px; text-decoration: none; color: var(--ink); font-weight: 700; font-size: .9rem; text-align: center; line-height: 1.2; background: var(--bg-2); border: 1px solid var(--line); transition: transform .2s ease, border-color .2s, background-color .2s; }
+.picker a:hover { transform: translateY(-4px); border-color: var(--c, var(--sky)); background: color-mix(in srgb, var(--c, var(--sky)) 12%, var(--bg-2)); }
+.picker img { width: 72px; height: 72px; border-radius: 18px; box-shadow: 0 10px 20px -10px #000; }
+@media (max-width: 860px) {
+  .picker ul { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 18px; scrollbar-width: none; margin-inline: -18px; padding-inline: 18px; }
+  .picker ul::-webkit-scrollbar { display: none; }
+  .picker li { flex: 0 0 112px; scroll-snap-align: start; }
 }
-.shots img:nth-child(2) { transform: translateY(18px) rotate(1.5deg); }
-.shots img:nth-child(1) { transform: rotate(-1.5deg); }
-.shots.wide { flex-direction: column; align-items: stretch; }
-.shots.wide img { width: 100%; max-width: 100%; transform: none; }
-.shots.wide img:nth-child(2) { transform: none; }
+
+/* ---------- Section headings ---------- */
+.sec-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 26px; }
+.sec-head h2 { font: 400 clamp(2.1rem, 5vw, 3.2rem)/1 var(--display); margin: 0; }
+.sec-head h2 em { font-style: normal; color: var(--sun); }
+.sec-head p { margin: 0; color: var(--ink-dim); max-width: 46ch; }
+
+/* ---------- Game spotlights ---------- */
+.games { padding-block: 40px 30px; }
+.spots { display: grid; gap: 28px; }
+.spot {
+  --a: #12204a; --b: #0a0f1f; --c: var(--sun); --ink-on: var(--ink);
+  position: relative; isolation: isolate; overflow: hidden; border-radius: var(--radius);
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 34px; align-items: center;
+  padding: 44px 48px; min-height: 480px;
+  background: linear-gradient(135deg, var(--a), var(--b));
+  border: 1px solid color-mix(in srgb, var(--c) 30%, transparent);
+  box-shadow: 0 30px 70px -40px color-mix(in srgb, var(--c) 60%, #000);
+}
+.spot::before { /* big color glow behind the art */
+  content: ""; position: absolute; z-index: -1; width: 70%; aspect-ratio: 1; right: -12%; top: 50%; transform: translateY(-50%);
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--c) 45%, transparent), transparent);
+  opacity: .6;
+}
+.spot::after { /* theme pattern */
+  content: ""; position: absolute; inset: 0; z-index: -1; opacity: .5; background: var(--pattern, none);
+}
+.spot:nth-child(even) .art { order: -1; }
+.spot:nth-child(even)::before { right: auto; left: -12%; }
+.spot .head { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
+.spot .head img { width: 84px; height: 84px; border-radius: 22px; flex: none; box-shadow: 0 12px 26px -10px #000, 0 0 0 2px color-mix(in srgb, var(--c) 50%, transparent); }
+.spot .kind { margin: 0 0 4px; font-size: .78rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--c); }
+.spot h3 { font: 400 clamp(1.7rem, 3.4vw, 2.4rem)/1.02 var(--display); margin: 0; color: var(--ink-on); text-wrap: balance; }
+.spot .tag { font: 400 clamp(1.35rem, 2.6vw, 1.75rem)/1.1 var(--display); color: var(--c); margin: 0 0 10px; }
+.spot .pitch { margin: 0 0 18px; font-size: 1.06rem; color: color-mix(in srgb, var(--ink-on) 86%, transparent); max-width: 46ch; }
+.chips { list-style: none; margin: 0 0 24px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.chips li { font-size: .85rem; font-weight: 700; padding: 6px 12px; border-radius: 999px; color: var(--ink-on); background: rgba(0,0,0,.28); border: 1px solid rgba(255,255,255,.14); }
+.stores { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.badge {
+  display: inline-flex; align-items: center; gap: 10px; min-width: 168px; padding: 9px 18px 9px 14px; border-radius: 13px;
+  background: #000; color: #fff; text-decoration: none; border: 1.5px solid rgba(255,255,255,.55);
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s;
+}
+.badge:hover { transform: translateY(-2px); border-color: #fff; box-shadow: 0 12px 24px -12px #000; }
+.badge svg { width: 26px; height: 26px; flex: none; }
+.badge span { display: grid; line-height: 1.05; white-space: nowrap; }
+.badge small { font-size: .66rem; font-weight: 600; letter-spacing: .02em; }
+.badge strong { font-size: 1.15rem; font-weight: 700; letter-spacing: -.01em; }
+.badge.soon { background: rgba(0,0,0,.25); border-style: dashed; border-color: rgba(255,255,255,.35); color: rgba(255,255,255,.75); cursor: default; }
+.badge.soon:hover { transform: none; box-shadow: none; }
+.trailer-btn {
+  display: inline-flex; align-items: center; gap: 9px; padding: 13px 18px; border-radius: 13px; cursor: pointer;
+  font: 800 .98rem/1 var(--body); text-decoration: none; color: #1a1200; background: var(--c); border: 0;
+  transition: transform .2s ease, filter .2s;
+}
+.trailer-btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+.trailer-btn svg { width: 20px; height: 20px; }
+.art { position: relative; display: flex; justify-content: center; align-items: center; gap: 18px; min-width: 0; }
+.art .phone { width: min(44%, 230px); transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+.art .phone:nth-child(1) { transform: rotate(-5deg) translateY(10px); }
+.art .phone:nth-child(2) { transform: rotate(5deg) translateY(-14px); }
+.spot:hover .art .phone:nth-child(1) { transform: rotate(-2deg) translateY(0); }
+.spot:hover .art .phone:nth-child(2) { transform: rotate(2deg) translateY(-22px); }
+.art .tablet { width: 100%; max-width: 560px; transform: rotate(-2deg); transition: transform .45s cubic-bezier(.2,.8,.2,1); }
+.spot:hover .art .tablet { transform: rotate(0) scale(1.02); }
+.ribbon { position: absolute; top: 22px; right: 22px; z-index: 2; padding: 6px 12px; border-radius: 999px; font: 800 .75rem/1 var(--body); letter-spacing: .1em; text-transform: uppercase; color: #1a1200; background: var(--c); }
+.spot:nth-child(even) .ribbon { right: auto; left: 22px; }
+
+/* per-game color worlds */
+.g-rugby  { --a: #0b3a1c; --b: #06140b; --c: #8dff3b; --pattern: repeating-linear-gradient(90deg, transparent 0 70px, rgba(255,255,255,.035) 70px 140px); }
+.g-fail   { --a: #3a0614; --b: #160520; --c: #ff3b5c; --pattern: radial-gradient(60% 80% at 90% 10%, rgba(163,75,255,.35), transparent 70%); }
+.g-garbage{ --a: #0f4a2c; --b: #062014; --c: #f0c24f; --pattern: radial-gradient(circle at 20% 20%, rgba(255,255,255,.05) 1px, transparent 1.5px) 0 0/22px 22px; }
+.g-euchre { --a: #13266b; --b: #080f2c; --c: #f2cd6b; --pattern: radial-gradient(circle at 20% 20%, rgba(255,255,255,.05) 1px, transparent 1.5px) 0 0/22px 22px; }
+.g-words  { --a: #1e7be6; --b: #0d3f8f; --c: #ffd23f; --pattern: radial-gradient(50% 60% at 15% 0%, rgba(255,255,255,.18), transparent 70%); }
+.g-poker  { --a: #4a0c1a; --b: #1a050b; --c: #f5c542; --pattern: radial-gradient(circle at 20% 20%, rgba(255,255,255,.05) 1px, transparent 1.5px) 0 0/22px 22px; }
+
+/* ---------- Trailers ---------- */
+.trailers { padding-block: 60px 30px; }
+.reel { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.reel a {
+  --c: var(--sun);
+  position: relative; display: block; width: 100%; aspect-ratio: 16 / 10; padding: 0; border: 0; border-radius: 22px; overflow: hidden; cursor: pointer;
+  background: #000; color: var(--ink); text-align: left; font: inherit;
+  box-shadow: 0 20px 40px -26px #000; transition: transform .25s ease, box-shadow .25s ease;
+}
+.reel a img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+.reel a::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,.85)); }
+.reel a:hover { transform: translateY(-4px); box-shadow: 0 26px 50px -24px color-mix(in srgb, var(--c) 60%, #000); }
+.reel a:hover img { transform: scale(1.06); }
+.reel .play { position: absolute; z-index: 1; top: 50%; left: 50%; width: 66px; height: 66px; margin: -33px 0 0 -33px; border-radius: 50%; display: grid; place-items: center; background: var(--c); color: #1a1200; box-shadow: 0 0 0 8px color-mix(in srgb, var(--c) 30%, transparent); transition: transform .25s ease; }
+.reel a:hover .play { transform: scale(1.1); }
+.reel .play svg { width: 26px; height: 26px; margin-left: 4px; }
+.reel .cap { position: absolute; z-index: 1; left: 18px; right: 18px; bottom: 14px; }
+.reel .cap b { display: block; font: 400 1.35rem/1.1 var(--display); }
+.reel .cap small { color: var(--ink-dim); font-weight: 600; }
+.yt-more { margin-top: 22px; }
+
+/* video dialog */
+dialog.vid { width: min(960px, 94vw); padding: 0; border: 0; border-radius: 20px; background: #000; color: var(--ink); box-shadow: 0 40px 100px rgba(0,0,0,.8); }
+dialog.vid::backdrop { background: rgba(5,8,18,.82); backdrop-filter: blur(6px); }
+dialog.vid .frame { position: relative; aspect-ratio: 16 / 9; }
+dialog.vid iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+dialog.vid .bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 16px; background: var(--bg-2); }
+dialog.vid .bar a { font-weight: 700; }
+dialog.vid .x { font: 800 .95rem/1 var(--body); padding: 10px 14px; border-radius: 10px; border: 1px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; }
 
 /* ---------- Coming soon ---------- */
-.soon-list { border-top: 1px solid var(--rail); padding-block: 40px 8px; display: grid; gap: 18px; }
-.soon-list h2 { font: 400 1.7rem/1.1 var(--display); margin: 0; }
+.soon { padding-block: 50px 20px; }
 .soon-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
-.soon-grid > div { min-width: 0; border: 1px dashed var(--rail); border-radius: 14px; padding: 18px 20px; }
-.soon-grid h3 { margin: 0 0 6px; font-size: 1.05rem; color: var(--chalk); }
-.soon-grid p { margin: 0; color: var(--chalk-dim); }
-@media (max-width: 820px) { .soon-grid { grid-template-columns: minmax(0, 1fr); } }
+.soon-card { position: relative; overflow: hidden; display: flex; gap: 18px; align-items: center; padding: 26px; border-radius: 22px; background: linear-gradient(135deg, var(--a), var(--b)); border: 1px dashed rgba(255,255,255,.25); }
+.soon-card .ico { width: 70px; height: 70px; flex: none; border-radius: 20px; display: grid; place-items: center; background: rgba(0,0,0,.25); border: 1px solid rgba(255,255,255,.15); }
+.soon-card .ico svg { width: 40px; height: 40px; }
+.soon-card h3 { margin: 0 0 4px; font: 400 1.4rem/1.1 var(--display); }
+.soon-card p { margin: 0; color: rgba(255,255,255,.82); }
+.soon-card .when { display: inline-block; margin-top: 8px; font: 800 .72rem/1 var(--body); letter-spacing: .12em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; background: rgba(0,0,0,.3); }
 
 /* ---------- Support ---------- */
-.support { border-top: 1px solid var(--rail); padding-block: 48px 30px; display: grid; gap: 22px; }
-.support h2 { font: 400 1.7rem/1.1 var(--display); margin: 0; }
+.support { padding-block: 60px 30px; }
 .support-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
-.support-grid > div { min-width: 0; }
-.support h3 { margin: 0 0 6px; font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--brass); }
-.support p { margin: 0; color: var(--chalk-dim); }
-.email { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 8px; }
-.email code { font: 600 1rem/1.3 var(--body); color: var(--chalk); user-select: all; word-break: break-all; }
-.copy {
-  font: 600 .85rem/1 var(--body); padding: 8px 12px; border-radius: 9px; cursor: pointer;
-  background: transparent; color: var(--chalk); border: 1px solid var(--rail);
-}
-.copy:hover { border-color: var(--brass); }
-footer { padding-block: 22px 34px; color: var(--chalk-dim); font-size: .88rem; display: flex; flex-wrap: wrap; gap: 8px 22px; justify-content: space-between; }
-footer a { color: var(--chalk-dim); }
+.box { min-width: 0; padding: 26px; border-radius: 22px; background: var(--bg-2); border: 1px solid var(--line); }
+.box .ico { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; margin-bottom: 14px; background: color-mix(in srgb, var(--k) 18%, transparent); color: var(--k); }
+.box .ico svg { width: 24px; height: 24px; }
+.box h3 { margin: 0 0 6px; font: 400 1.35rem/1.1 var(--display); }
+.box p { margin: 0; color: var(--ink-dim); }
+.email { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 14px; }
+.email code { font: 700 1rem/1.3 var(--body); color: var(--ink); user-select: all; word-break: break-all; }
+.copy { font: 800 .85rem/1 var(--body); padding: 9px 14px; border-radius: 10px; cursor: pointer; background: var(--sky); color: #001a24; border: 0; }
+.copy:hover { filter: brightness(1.1); }
 
-@media (max-width: 820px) {
-  .game { grid-template-columns: minmax(0, 1fr); gap: 22px; }
-  .game:nth-child(even) .card { order: 0; }
+footer { margin-top: 40px; border-top: 1px solid var(--line); }
+footer .wrap { padding-block: 26px 40px; display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; align-items: center; color: var(--ink-dim); font-size: .9rem; }
+footer a { color: var(--ink-dim); text-decoration: none; font-weight: 600; }
+footer a:hover { color: var(--ink); }
+footer nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+
+/* ---------- Scroll reveal (only when JS is on) ---------- */
+.js .rv { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1); }
+.js .rv.in { opacity: 1; transform: none; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 960px) {
+  .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 10px; text-align: center; }
+  .hero .lede { margin-inline: auto; }
+  .hero-cta, .hero-facts { justify-content: center; }
+  .stage { height: 430px; }
+  .stage .ph { width: 170px; }
+  .stage .ph:nth-child(2) { width: 192px; }
+  .spot { grid-template-columns: minmax(0, 1fr); padding: 30px 24px 34px; gap: 26px; min-height: 0; }
+  .spot .art, .spot:nth-child(even) .art { order: -1; }
+  .spot::before, .spot:nth-child(even)::before { width: 120%; left: -10%; right: auto; top: 0; transform: translateY(-35%); }
+  .art .phone { width: min(42%, 200px); }
+  .reel { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .support-grid { grid-template-columns: minmax(0, 1fr); }
-  .hero { padding-block: 40px 28px; }
 }
-@media (max-width: 420px) {
-  .card { padding: 26px 20px 24px; }
-  .head { padding-left: 22px; }
-  .head img { width: 62px; height: 62px; border-radius: 15px; }
-  .stores { padding-right: 0; }
+@media (max-width: 640px) {
+  .hero { padding-block: 36px 16px; }
+  .stage { height: 360px; margin-top: 8px; }
+  .stage .ph { width: 136px; }
+  .stage .ph:nth-child(2) { width: 156px; }
+  .stage .icon { width: 56px; border-radius: 15px; }
+  .phone { border-radius: 24px; padding: 5px; }
+  .phone img { border-radius: 20px; }
+  .spot { border-radius: 22px; }
+  .spot .head img { width: 68px; height: 68px; border-radius: 18px; }
+  .stores { gap: 8px; }
+  .badge { min-width: 0; flex: 1 1 128px; justify-content: center; padding: 9px 10px; gap: 8px; }
+  .badge strong { font-size: 1.02rem; }
+  .trailer-btn { flex: 1 1 100%; justify-content: center; }
+  .reel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: 18px; margin-inline: -18px; padding: 4px 18px 12px; scrollbar-width: none; }
+  .reel::-webkit-scrollbar { display: none; }
+  .reel a { flex: 0 0 84%; scroll-snap-align: start; }
+  .soon-grid { grid-template-columns: minmax(0, 1fr); }
+  .btn { flex: 1 1 auto; justify-content: center; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .store { transition: none; }
-  .store:hover { transform: none; }
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .js .rv { opacity: 1; transform: none; }
+}
+
+/* =====================================================================
+   v2 — BRIGHT ARCADE PASS: saturated colors, glowing outlines, 3D type
+   ===================================================================== */
+:root { --bg: #0a1745; --bg-2: #12256b; --line: #2b44a8; --ink-dim: #c9d4ff; }
+html { background: var(--bg); }
+body {
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255,255,255,.07) 1px, transparent 1.6px) 0 0/34px 34px,
+    linear-gradient(180deg, #0d2366 0%, #0a1745 35%, #12145a 70%, #0a1745 100%);
+}
+.top { background: color-mix(in srgb, #0b1b55 82%, transparent); border-bottom: 2px solid rgba(53,208,255,.35); }
+.top ul a { color: #e6ecff; }
+.top ul a:hover { background: rgba(53,208,255,.18); }
+.top ul a.cta { box-shadow: 0 4px 0 #b4470f; }
+
+/* chunky 3D lettering */
+.pop { color: #fff; text-shadow: 0 2px 0 #0a1745, 0 4px 0 #0a1745, 0 6px 0 rgba(10,23,69,.9), 0 10px 24px rgba(0,0,0,.45); }
+.hero h1 { color: #fff; -webkit-text-stroke: 0; text-shadow: 0 3px 0 #1b3a9e, 0 6px 0 #142c7a, 0 9px 0 #0e1f58, 0 16px 30px rgba(0,0,0,.5); }
+.hero h1 span { background: none; color: #ffd21f; -webkit-text-fill-color: #ffd21f;
+  text-shadow: 0 3px 0 #ff7a1a, 0 6px 0 #e0530b, 0 9px 0 #a83a05, 0 16px 30px rgba(0,0,0,.5); }
+
+/* bright hero sky + rotating light rays */
+.hero::before {
+  background:
+    radial-gradient(55% 60% at 72% 45%, rgba(64,170,255,.75), transparent 70%),
+    radial-gradient(35% 45% at 10% 15%, rgba(0,229,255,.45), transparent 70%),
+    radial-gradient(30% 40% at 95% 8%, rgba(255,64,170,.55), transparent 70%),
+    radial-gradient(40% 40% at 60% 100%, rgba(255,196,0,.40), transparent 70%),
+    linear-gradient(180deg, #1546b8 0%, #0f2f8a 55%, #0a1745 100%);
+}
+.hero::after { opacity: .5; background-image: linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px); }
+.rays { position: absolute; left: 50%; top: 50%; width: 900px; height: 900px; translate: -50% -50%; z-index: 0; pointer-events: none;
+  background: repeating-conic-gradient(from 0deg, rgba(255,255,255,.16) 0deg 9deg, transparent 9deg 22deg);
+  mask-image: radial-gradient(closest-side, #000 25%, transparent 72%); -webkit-mask-image: radial-gradient(closest-side, #000 25%, transparent 72%);
+  animation: spin 60s linear infinite; }
+@keyframes spin { to { rotate: 360deg; } }
+.spark { position: absolute; z-index: 5; color: #fff; font-size: 26px; line-height: 1; text-shadow: 0 0 12px #fff, 0 0 24px #35d0ff; animation: twinkle 2.4s ease-in-out infinite; pointer-events: none; }
+.spark.s2 { color: #ffd21f; text-shadow: 0 0 12px #ffd21f; animation-delay: -.8s; font-size: 20px; }
+.spark.s3 { color: #ff5fb0; text-shadow: 0 0 12px #ff5fb0; animation-delay: -1.6s; font-size: 18px; }
+@keyframes twinkle { 0%,100% { transform: scale(.6) rotate(0); opacity: .5; } 50% { transform: scale(1.15) rotate(20deg); opacity: 1; } }
+.stage .phone { box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--pc, #35d0ff), 0 0 34px var(--pc, #35d0ff), 0 30px 60px -20px rgba(0,0,0,.8); }
+.stage .icon { box-shadow: 0 0 0 3px #fff, 0 0 22px rgba(255,255,255,.55), 0 14px 30px -10px rgba(0,0,0,.8); }
+.pill { background: rgba(255,255,255,.16); border: 2px solid rgba(255,255,255,.4); }
+.hero .lede { color: #e3e9ff; }
+.hero .lede strong { color: #fff; }
+.hero-facts { color: #e3e9ff; }
+
+/* 3D buttons */
+.btn.primary { color: #3a1700; background: linear-gradient(180deg, #ffe14d, #ffb020 60%, #ff8a1f); box-shadow: 0 6px 0 #c2540c, 0 14px 26px -8px rgba(255,122,47,.8); border: 2px solid #fff3b0; }
+.btn.primary:hover { box-shadow: 0 8px 0 #c2540c, 0 18px 30px -8px rgba(255,122,47,.9); }
+.btn.primary:active { transform: translateY(4px); box-shadow: 0 2px 0 #c2540c; }
+.btn.ghost { background: linear-gradient(180deg, #2f7bff, #1b4fd6); border: 2px solid #9fd0ff; box-shadow: 0 6px 0 #0f2f8a; }
+.trailer-btn { color: #1a1200; border: 2px solid rgba(255,255,255,.75); box-shadow: 0 5px 0 rgba(0,0,0,.35); }
+.trailer-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,.35); }
+.badge { border: 2px solid #fff; box-shadow: 0 5px 0 rgba(0,0,0,.4); }
+.badge.soon { box-shadow: none; }
+
+/* picker tiles — each in its game color */
+.picker a { background: linear-gradient(160deg, color-mix(in srgb, var(--c) 55%, #1a2a80), color-mix(in srgb, var(--c) 22%, #0d1a55));
+  border: 2px solid var(--c); box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 25%, transparent), 0 0 22px color-mix(in srgb, var(--c) 45%, transparent), 0 6px 0 rgba(0,0,0,.35);
+  text-shadow: 0 2px 0 rgba(0,0,0,.45); font-family: var(--display); font-weight: 400; font-size: 1.05rem; letter-spacing: .01em; }
+.picker a:hover { background: linear-gradient(160deg, color-mix(in srgb, var(--c) 70%, #1a2a80), color-mix(in srgb, var(--c) 30%, #0d1a55)); }
+.picker img { box-shadow: 0 0 0 2px #fff, 0 10px 20px -8px #000; }
+
+/* section headings */
+.sec-head h2 { color: #fff; text-shadow: 0 3px 0 #1b3a9e, 0 6px 0 #0e1f58, 0 12px 24px rgba(0,0,0,.45); }
+.sec-head h2 em { color: #ffd21f; text-shadow: 0 3px 0 #ff7a1a, 0 6px 0 #a83a05, 0 12px 24px rgba(0,0,0,.45); }
+.sec-head p { color: #d3dcff; }
+
+/* game spotlights — saturated color worlds with glowing outlines */
+.spot {
+  border: 3px solid var(--c);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--c) 28%, transparent), 0 0 46px color-mix(in srgb, var(--c) 55%, transparent), inset 0 2px 0 rgba(255,255,255,.35), inset 0 0 80px rgba(255,255,255,.06);
+}
+.spot::before {
+  width: 110%; aspect-ratio: 1; opacity: 1;
+  background: repeating-conic-gradient(from 0deg, rgba(255,255,255,.12) 0deg 8deg, transparent 8deg 20deg);
+  mask-image: radial-gradient(closest-side, #000 15%, transparent 70%); -webkit-mask-image: radial-gradient(closest-side, #000 15%, transparent 70%);
+  right: -30%;
+}
+.spot:nth-child(even)::before { left: -30%; }
+.spot h3 { color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,.55), 0 4px 0 rgba(0,0,0,.35), 0 8px 18px rgba(0,0,0,.35); }
+.spot .tag { text-shadow: 0 2px 0 rgba(0,0,0,.5), 0 0 18px color-mix(in srgb, var(--c) 60%, transparent); }
+.spot .kind { color: #fff; display: inline-block; padding: 4px 10px; border-radius: 8px; background: rgba(0,0,0,.3); border: 1px solid var(--c); }
+.spot .pitch { color: #fff; }
+.spot .head img { box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--c), 0 0 26px var(--c), 0 12px 26px -10px #000; }
+.chips li { background: rgba(255,255,255,.16); border: 1.5px solid rgba(255,255,255,.45); }
+.art .phone, .art .tablet { box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--c), 0 0 30px var(--c), 0 30px 60px -22px rgba(0,0,0,.8); }
+.ribbon { border: 2px solid #fff; box-shadow: 0 4px 0 rgba(0,0,0,.35), 0 0 16px var(--c); font-size: .8rem; }
+.g-rugby  { --a: #1fb04d; --b: #0a5a26; --c: #b6ff3b; --pattern: repeating-linear-gradient(90deg, transparent 0 70px, rgba(255,255,255,.07) 70px 140px); }
+.g-fail   { --a: #ff1f4b; --b: #6a12c9; --c: #ff6ad5; --pattern: radial-gradient(60% 80% at 90% 10%, rgba(255,255,255,.18), transparent 70%); }
+.g-garbage{ --a: #23a95e; --b: #0c5a32; --c: #ffd44f; --pattern: radial-gradient(circle at 20% 20%, rgba(255,255,255,.09) 1.2px, transparent 1.8px) 0 0/22px 22px; }
+.g-euchre { --a: #2f62ff; --b: #13289a; --c: #ffd86b; --pattern: radial-gradient(circle at 20% 20%, rgba(255,255,255,.09) 1.2px, transparent 1.8px) 0 0/22px 22px; }
+.g-words  { --a: #4cc3ff; --b: #1e63e6; --c: #ffe03a; --pattern: radial-gradient(50% 60% at 15% 0%, rgba(255,255,255,.35), transparent 70%); }
+.g-poker  { --a: #e5163a; --b: #6b0a1c; --c: #ffcf3f; --pattern: radial-gradient(circle at 20% 20%, rgba(255,255,255,.09) 1.2px, transparent 1.8px) 0 0/22px 22px; }
+
+/* trailers on a bright band */
+.trailers { position: relative; isolation: isolate; padding-bottom: 60px; }
+.trailers::before { content: ""; position: absolute; z-index: -1; inset: 20px calc(50% - 50vw) -10px; background: linear-gradient(135deg, #5a1fd1, #1f4fe0 55%, #0aa0d8); border-block: 3px solid rgba(255,255,255,.25); }
+.reel a { border: 3px solid var(--c); box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 30%, transparent), 0 0 30px color-mix(in srgb, var(--c) 55%, transparent), 0 8px 0 rgba(0,0,0,.35); }
+.reel .play { border: 3px solid #fff; box-shadow: 0 0 0 8px color-mix(in srgb, var(--c) 40%, transparent), 0 0 30px var(--c); animation: pulse 2.2s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { scale: 1; } 50% { scale: 1.08; } }
+.reel .cap b { text-shadow: 0 2px 0 #000, 0 4px 10px rgba(0,0,0,.6); }
+.reel .cap small { color: #fff; }
+.yt-more .btn.ghost { background: #fff; color: #10172c; border-color: #fff; box-shadow: 0 6px 0 #9aa7d6; }
+
+/* coming soon + support */
+.soon-card { border: 3px dashed rgba(255,255,255,.7); box-shadow: 0 0 30px color-mix(in srgb, var(--a) 60%, transparent); }
+.soon-card h3 { text-shadow: 0 2px 0 rgba(0,0,0,.45); }
+.box { background: linear-gradient(160deg, #1a3399, #11226b); border: 2px solid color-mix(in srgb, var(--k) 70%, transparent); box-shadow: 0 0 26px color-mix(in srgb, var(--k) 25%, transparent), 0 6px 0 rgba(0,0,0,.3); }
+.box p { color: #dbe3ff; }
+.box .ico { background: var(--k); color: #0a1745; }
+footer { border-top: 2px solid rgba(53,208,255,.35); background: #081238; }
+
+@media (max-width: 960px) { .rays { width: 640px; height: 640px; } }
+@media (prefers-reduced-motion: reduce) { .rays, .spark, .reel .play { animation: none !important; } }
+
+/* =====================================================================
+   v3 — ACTION PASS: big icons, big straight action shots, less text
+   ===================================================================== */
+.spot { grid-template-columns: minmax(250px, .78fr) minmax(0, 2fr); gap: 36px; padding: 40px; min-height: 0; }
+.spot:nth-child(even) .art { order: 0; }
+.spot:nth-child(even)::before { left: auto; right: -30%; }
+.spot:nth-child(even) .ribbon { left: auto; right: 22px; }
+.info { display: grid; justify-items: start; align-content: center; gap: 12px; }
+.big-icon { width: 148px; height: 148px; border-radius: 36px; box-shadow: 0 0 0 4px #fff, 0 0 0 8px var(--c), 0 0 40px var(--c), 0 18px 30px -12px #000; transition: transform .35s cubic-bezier(.2,.8,.2,1); margin-bottom: 6px; }
+.spot:hover .big-icon { transform: rotate(-4deg) scale(1.05); }
+.spot h3 { font-size: clamp(2.2rem, 4.4vw, 3.2rem); line-height: .95; }
+.spot h3 small { display: block; font-size: .5em; margin-top: 6px; color: var(--c); }
+.spot .tag { font-size: clamp(1.2rem, 2vw, 1.45rem); color: #fff; margin: 0; }
+.spot .kind { margin: 0; }
+.info .stores { margin-top: 6px; }
+.info .trailer-btn { margin-top: 2px; }
+.art { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: center; }
+.art .shot { margin: 0; border-radius: 22px; overflow: hidden; background: #000; aspect-ratio: 540 / 802;
+  box-shadow: 0 0 0 4px #fff, 0 0 0 7px var(--c), 0 0 30px var(--c), 0 24px 40px -18px rgba(0,0,0,.8);
+  transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+.art .shot img { width: 100%; height: 100%; object-fit: cover; }
+.art .shot:nth-child(2) { transform: translateY(-14px) scale(1.04); z-index: 1; }
+.art .shot:hover { transform: translateY(-8px) scale(1.04); z-index: 2; }
+.art .shot:nth-child(2):hover { transform: translateY(-22px) scale(1.08); }
+.art.wide { grid-template-columns: 1fr 1fr; }
+.art.wide .shot { aspect-ratio: 1200 / 594; }
+.art.wide .shot:first-child { grid-column: 1 / -1; transform: none; }
+.art.wide .shot:nth-child(2) { transform: none; }
+.art.wide .shot:hover { transform: translateY(-6px) scale(1.02); }
+.picker img { width: 92px; height: 92px; border-radius: 24px; }
+.picker a { padding: 18px 8px 14px; }
+.hero .lede { font-size: clamp(1.25rem, 2.4vw, 1.55rem); }
+.stage .phone img { aspect-ratio: 540 / 802; }
+.reel .cap b { font-size: 1.6rem; }
+.soon-card { flex-wrap: wrap; }
+.soon-grid { align-items: start; }
+.soon-shots { display: flex; gap: 10px; width: 100%; }
+.soon-shots img { flex: 1 1 0; min-width: 0; border-radius: 14px; aspect-ratio: 540/802; object-fit: cover; box-shadow: 0 0 0 3px #fff, 0 10px 20px -10px #000; }
+@media (max-width: 960px) {
+  .spot { grid-template-columns: minmax(0, 1fr); padding: 28px 22px 30px; gap: 24px; }
+  .spot .art, .spot:nth-child(even) .art { order: 2; }
+  .info { justify-items: center; text-align: center; }
+  .info .stores { justify-content: center; }
+  .big-icon { width: 124px; height: 124px; border-radius: 30px; }
+}
+@media (max-width: 640px) {
+  .art:not(.wide) { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 14px; margin-inline: -22px; padding: 18px 22px 22px; scroll-padding-inline: 22px; scrollbar-width: none; }
+  .art::-webkit-scrollbar { display: none; }
+  .art:not(.wide) .shot { flex: 0 0 72%; scroll-snap-align: center; }
+  .art:not(.wide) .shot:nth-child(2) { transform: none; }
+  .art.wide { gap: 12px; }
+  .info .trailer-btn { width: 100%; justify-content: center; }
+  .picker img { width: 76px; height: 76px; border-radius: 20px; }
 }
 </style>
 </head>
 <body>
 
-<header class="top wrap">
-  <nav aria-label="Main">
-    <a class="mark" href="#top">NQJS <span>Studio</span></a>
+<!-- Shared icons -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-apple" viewBox="0 0 24 24"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.8-1.1-2.9-4.3zM13.9 5.3c.7-.9 1.2-2 1-3.2-1 0-2.2.7-3 1.5-.6.7-1.2 1.9-1 3.1 1.1.1 2.3-.6 3-1.4z"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path fill="#00d7fe" d="M3.6 2.2c-.3.3-.4.7-.4 1.2v17.2c0 .5.1.9.4 1.2l9.6-9.8z"/><path fill="#ffce00" d="m16.4 15.2-3.2-3.2 3.2-3.2 3.7 2.1c1.1.6 1.1 1.6 0 2.2z"/><path fill="#ff3a44" d="M16.4 15.2 13.2 12l-9.6 9.8c.4.4 1 .4 1.6.1z"/><path fill="#00f076" d="M16.4 8.8 5.2 2.1c-.6-.4-1.2-.3-1.6.1l9.6 9.8z"/></symbol>
+  <symbol id="i-yt" viewBox="0 0 24 24"><path fill="currentColor" d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3L10 15z"/></symbol>
+  <symbol id="i-tri" viewBox="0 0 24 24"><path fill="currentColor" d="M7 4.5v15c0 .8.9 1.3 1.6.8l11.3-7.5c.6-.4.6-1.2 0-1.6L8.6 3.7C7.9 3.2 7 3.7 7 4.5z"/></symbol>
+</svg>
+
+<header class="top">
+  <nav class="wrap" aria-label="Main">
+    <a class="brand" href="#top" aria-label="NQJS Studio home">
+      <svg viewBox="0 0 48 48" aria-hidden="true">
+        <defs><linearGradient id="pad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#35d0ff"/><stop offset="1" stop-color="#2a6bff"/></linearGradient></defs>
+        <path fill="url(#pad)" d="M14 12h20c6.6 0 11 5.6 12 13.5.8 6.4-1.4 11.5-5.6 11.5-3 0-4.6-2.4-6.6-5.2-.8-1.1-1.8-1.8-3.2-1.8h-9.2c-1.4 0-2.4.7-3.2 1.8C16.2 34.6 14.6 37 11.6 37 7.4 37 5.2 31.9 6 25.5 7 17.6 7.4 12 14 12z"/>
+        <path fill="#fff" d="M15 19.5h3v3h3v3h-3v3h-3v-3h-3v-3h3z"/>
+        <circle cx="32" cy="20.5" r="2.3" fill="#ffc93c"/><circle cx="36.5" cy="25" r="2.3" fill="#ff4f9a"/><circle cx="27.5" cy="25" r="2.3" fill="#8dff3b"/><circle cx="32" cy="29.5" r="2.3" fill="#fff"/>
+      </svg>
+      <span><b>NQJS</b><small>STUDIO</small></span>
+    </a>
     <ul>
       <li><a href="#games">Games</a></li>
-      <li><a href="#support">Support</a></li>
-      <li><a href="nqjs-privacy-policy/">Privacy</a></li>
-      <li><a href="https://www.youtube.com/@NQJSstudio" target="_blank" rel="noopener">YouTube</a></li>
+      <li class="hide-sm"><a href="#trailers">Trailers</a></li>
+      <li class="hide-sm"><a href="#support">Support</a></li>
+      <li><a class="cta" href="https://www.youtube.com/@NQJSstudio" target="_blank" rel="noopener">YouTube</a></li>
     </ul>
   </nav>
 </header>
 
 <main id="top">
-  <section class="hero wrap">
-    <p class="eyebrow">Independent games for iPhone, iPad &amp; Android</p>
-    <h1>Card-table classics, rugby kicks and a quiz that <em>wants you to fail.</em></h1>
-    <p>NQJS Studio makes small, polished games you can pick up in a minute: the card games families have played for generations, a rugby kicker with real wind and weather, a one-letter-at-a-time word puzzle, and a six-question brain quiz with no second chances.</p>
-    <div class="suits" aria-hidden="true"><span>♠</span><span class="r">♥</span><span>♣</span><span class="r">♦</span></div>
-  </section>
 
-  <section class="games wrap" id="games" aria-label="Our games">
-
-    <article class="game" id="euchre">
-      <div class="card">
-        <div class="idx tl" aria-hidden="true">E<b>♠</b></div>
-        <div class="idx br" aria-hidden="true">E<b>♠</b></div>
-        <div class="head">
-          <img src="img/euchre-icon.jpg" alt="Euchre app icon" width="76" height="76">
-          <div>
-            <h2>Euchre: Classic &amp; House Rules</h2>
-            <p class="kind">Card game · New</p>
-          </div>
-        </div>
-        <p class="pitch">The Midwest kitchen-table classic. Order it up, go alone and euchre 'em, with the house rules you grew up with switched on.</p>
-        <ul class="facts">
-          <li>Bowers &amp; loners</li><li>Stick the Dealer</li><li>2 or 4 players</li><li>Career: Cornfield to Coinsino</li>
-        </ul>
-        <div class="stores">
-          <a class="store" href="https://apps.apple.com/us/app/id6820276546" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.8-1.1-2.9-4.3zM13.9 5.3c.7-.9 1.2-2 1-3.2-1 0-2.2.7-3 1.5-.6.7-1.2 1.9-1 3.1 1.1.1 2.3-.6 3-1.4z"/></svg>App Store</a>
-          <a class="store alt" href="https://play.google.com/store/apps/details?id=com.nico.euchre" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 2.6v18.8c0 .4.4.6.7.4l10.9-9.4c.3-.2.3-.6 0-.8L4.7 2.2c-.3-.2-.7 0-.7.4zm12.6 7 2.9 1.7c.6.4.6 1.2 0 1.5l-2.9 1.7-2.5-2.4 2.5-2.5z"/></svg>Google Play</a>
-          <a class="store alt yt" href="https://www.youtube.com/watch?v=WwFDd6zKf_8" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3L10 15z"/></svg>Watch trailer</a>
-        </div>
-      </div>
-      <div class="shots">
-        <img src="img/euchre-1.jpg" alt="Euchre main menu with Play, Career and Daily Missions" width="405" height="720" loading="lazy">
-        <img src="img/euchre-2.jpg" alt="A Euchre hand at the table, deciding whether to order up spades" width="405" height="720" loading="lazy">
-      </div>
-    </article>
-
-    <article class="game" id="garbage">
-      <div class="card">
-        <div class="idx tl red" aria-hidden="true">G<b>♥</b></div>
-        <div class="idx br red" aria-hidden="true">G<b>♥</b></div>
-        <div class="head">
-          <img src="img/garbage-icon.jpg" alt="Garbage app icon" width="76" height="76">
-          <div>
-            <h2>Garbage: Classic Card Game</h2>
-            <p class="kind">Card game</p>
-          </div>
-        </div>
-        <p class="pitch">Also known as Trash or Ten. Race the computer to clear your board from Ace to 10, or go all the way to King in Ultimate Garbage. Jokers are wild.</p>
-        <ul class="facts">
-          <li>Ace to 10 or Ace to King</li><li>Card Quest: 180 stars</li><li>Daily Challenge</li><li>Peek · 2X · Undo</li>
-        </ul>
-        <div class="stores">
-          <a class="store" href="https://apps.apple.com/us/app/id6804512415" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.8-1.1-2.9-4.3zM13.9 5.3c.7-.9 1.2-2 1-3.2-1 0-2.2.7-3 1.5-.6.7-1.2 1.9-1 3.1 1.1.1 2.3-.6 3-1.4z"/></svg>App Store</a>
-          <a class="store alt" href="https://play.google.com/store/apps/details?id=com.nico.garbage" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 2.6v18.8c0 .4.4.6.7.4l10.9-9.4c.3-.2.3-.6 0-.8L4.7 2.2c-.3-.2-.7 0-.7.4zm12.6 7 2.9 1.7c.6.4.6 1.2 0 1.5l-2.9 1.7-2.5-2.4 2.5-2.5z"/></svg>Google Play</a>
-          <a class="store alt yt" href="https://www.youtube.com/watch?v=rjCD-EWtcu0" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3L10 15z"/></svg>Watch trailer</a>
-        </div>
-      </div>
-      <div class="shots">
-        <img src="img/garbage-1.jpg" alt="Garbage main menu: Classic, Ultimate, Card Quest and Daily Challenge" width="405" height="720" loading="lazy">
-        <img src="img/garbage-2.jpg" alt="Card Quest map with stages and stars" width="405" height="720" loading="lazy">
-      </div>
-    </article>
-
-    <article class="game" id="rocket-rugby">
-      <div class="card">
-        <div class="idx tl" aria-hidden="true">R<b>♣</b></div>
-        <div class="idx br" aria-hidden="true">R<b>♣</b></div>
-        <div class="head">
-          <img src="img/rugby-icon.jpg" alt="Rocket Rugby app icon" width="76" height="76">
-          <div>
-            <h2>Rocket Rugby: Kick &amp; Run</h2>
-            <p class="kind">Sports</p>
-          </div>
-        </div>
-        <p class="pitch">Read the wind, time three taps and split the posts. Then switch to Run mode and dodge the defence all the way to the try line.</p>
-        <ul class="facts">
-          <li>Three-tap kick meter</li><li>Wind, rain &amp; snow</li><li>Road to the Cup</li><li>Daily Kick</li>
-        </ul>
-        <div class="stores">
-          <a class="store" href="https://apps.apple.com/us/app/id6804029828" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.8-1.1-2.9-4.3zM13.9 5.3c.7-.9 1.2-2 1-3.2-1 0-2.2.7-3 1.5-.6.7-1.2 1.9-1 3.1 1.1.1 2.3-.6 3-1.4z"/></svg>App Store</a>
-          <a class="store alt" href="https://play.google.com/store/apps/details?id=com.nico.rocketrugby" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 2.6v18.8c0 .4.4.6.7.4l10.9-9.4c.3-.2.3-.6 0-.8L4.7 2.2c-.3-.2-.7 0-.7.4zm12.6 7 2.9 1.7c.6.4.6 1.2 0 1.5l-2.9 1.7-2.5-2.4 2.5-2.5z"/></svg>Google Play</a>
-          <a class="store alt yt" href="https://www.youtube.com/watch?v=SgvB0huouUg" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3L10 15z"/></svg>Watch trailer</a>
-        </div>
-      </div>
-      <div class="shots wide">
-        <img src="img/rugby-2.jpg" alt="Lining up a goal kick between the posts" width="720" height="405" loading="lazy">
-      </div>
-    </article>
-
-    <article class="game" id="you-will-fail">
-      <div class="card">
-        <div class="idx tl red" aria-hidden="true">F<b>♦</b></div>
-        <div class="idx br red" aria-hidden="true">F<b>♦</b></div>
-        <div class="head">
-          <img src="img/fail-icon.jpg" alt="You Will Fail app icon" width="76" height="76">
-          <div>
-            <h2>You Will Fail: Brain Quiz Game</h2>
-            <p class="kind">Trivia</p>
-          </div>
-        </div>
-        <p class="pitch">Six questions, each harder than the last, against the clock. One mistake ends your run. Most people don't make it. Prove us wrong.</p>
-        <ul class="facts">
-          <li>6 questions, no second chances</li><li>Daily run &amp; streaks</li><li>Science, history &amp; more</li>
-        </ul>
-        <div class="stores">
-          <a class="store" href="https://apps.apple.com/us/app/id6804033648" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.8-1.1-2.9-4.3zM13.9 5.3c.7-.9 1.2-2 1-3.2-1 0-2.2.7-3 1.5-.6.7-1.2 1.9-1 3.1 1.1.1 2.3-.6 3-1.4z"/></svg>App Store</a>
-          <a class="store alt" href="https://play.google.com/store/apps/details?id=com.Nico.youwillfail" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 2.6v18.8c0 .4.4.6.7.4l10.9-9.4c.3-.2.3-.6 0-.8L4.7 2.2c-.3-.2-.7 0-.7.4zm12.6 7 2.9 1.7c.6.4.6 1.2 0 1.5l-2.9 1.7-2.5-2.4 2.5-2.5z"/></svg>Google Play</a>
-          <a class="store alt yt" href="https://www.youtube.com/watch?v=hw-XDbHnJmM" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3L10 15z"/></svg>Watch trailer</a>
-        </div>
-      </div>
-      <div class="shots">
-        <img src="img/fail-1.jpg" alt="You Will Fail start screen: six questions, one ego" width="405" height="720" loading="lazy">
-        <img src="img/fail-2.jpg" alt="A timed life-science question with six answers" width="405" height="720" loading="lazy">
-      </div>
-    </article>
-
-    <article class="game" id="poker">
-      <div class="card">
-        <div class="idx tl" aria-hidden="true">P<b>♠</b></div>
-        <div class="idx br" aria-hidden="true">P<b>♠</b></div>
-        <div class="head">
-          <img src="img/poker-icon.webp" alt="Dealer's Choice: Home Poker app icon" width="76" height="76">
-          <div>
-            <h2>Dealer's Choice: Home Poker</h2>
-            <p class="kind">Card game · New · 18+</p>
-          </div>
-        </div>
-        <p class="pitch">Poker night, and the dealer calls the game. 3-9-3, Stick the Dealer, No Peek, In Between and more kitchen-table classics against friendly computer players. Play money only.</p>
-        <ul class="facts">
-          <li>8 home poker games</li><li>Road to Success</li><li>Daily Missions</li><li>Plays offline</li>
-        </ul>
-        <div class="stores">
-          <a class="store alt" href="https://play.google.com/store/apps/details?id=com.Nico.NicosPokerDealersChoice" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 2.6v18.8c0 .4.4.6.7.4l10.9-9.4c.3-.2.3-.6 0-.8L4.7 2.2c-.3-.2-.7 0-.7.4zm12.6 7 2.9 1.7c.6.4.6 1.2 0 1.5l-2.9 1.7-2.5-2.4 2.5-2.5z"/></svg>Google Play</a>
-          <span class="store soon"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.8-1.1-2.9-4.3zM13.9 5.3c.7-.9 1.2-2 1-3.2-1 0-2.2.7-3 1.5-.6.7-1.2 1.9-1 3.1 1.1.1 2.3-.6 3-1.4z"/></svg>App Store · coming soon</span>
-          <a class="store alt yt" href="https://www.youtube.com/watch?v=rYpqUvBNhjU" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3L10 15z"/></svg>Watch trailer</a>
-        </div>
-      </div>
-      <div class="shots wide">
-        <img src="img/poker-1.webp" alt="A hand of 3-9-3 at the poker table, threes and nines wild" width="720" height="360" loading="lazy">
-      </div>
-    </article>
-
-    <article class="game" id="word-switch">
-      <div class="card">
-        <div class="idx tl red" aria-hidden="true">W<b>♥</b></div>
-        <div class="idx br red" aria-hidden="true">W<b>♥</b></div>
-        <div class="head">
-          <img src="img/wordswitch-icon.jpg" alt="Word Switch app icon" width="76" height="76">
-          <div>
-            <h2>Word Switch: Letter Puzzle</h2>
-            <p class="kind">Word puzzle · New</p>
-          </div>
-        </div>
-        <p class="pitch">Change one letter at a time to turn one word into another, like WORK to HELD. Every row must be a real word, and every miss costs a heart.</p>
-        <ul class="facts">
-          <li>120 stages, 4 worlds</li><li>11 word categories</li><li>Daily Challenge</li><li>Spot, Letter &amp; Align boosts</li>
-        </ul>
-        <div class="stores">
-          <a class="store alt" href="https://play.google.com/store/apps/details?id=com.NQJSGames.WordSwitch" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 2.6v18.8c0 .4.4.6.7.4l10.9-9.4c.3-.2.3-.6 0-.8L4.7 2.2c-.3-.2-.7 0-.7.4zm12.6 7 2.9 1.7c.6.4.6 1.2 0 1.5l-2.9 1.7-2.5-2.4 2.5-2.5z"/></svg>Google Play</a>
-          <span class="store soon"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.4 12.6c0-2.4 2-3.6 2.1-3.7-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.8-1.1-2.9-4.3zM13.9 5.3c.7-.9 1.2-2 1-3.2-1 0-2.2.7-3 1.5-.6.7-1.2 1.9-1 3.1 1.1.1 2.3-.6 3-1.4z"/></svg>App Store · coming soon</span>
-          <a class="store alt yt" href="https://www.youtube.com/watch?v=TH0aQWligyI" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3L10 15z"/></svg>Watch trailer</a>
-        </div>
-      </div>
-      <div class="shots">
-        <img src="img/wordswitch-1.jpg" alt="Word Switch ladder from WORK to HELD, one letter at a time" width="405" height="720" loading="lazy">
-        <img src="img/wordswitch-2.jpg" alt="Word Switch home screen with Word Quest, categories and the Daily Challenge" width="405" height="720" loading="lazy">
-      </div>
-    </article>
-
-  </section>
-
-  <section class="soon-list wrap" id="coming-soon" aria-label="Coming soon">
-    <h2>Coming soon</h2>
-    <div class="soon-grid">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
       <div>
-        <h3>Soccer Juggling: Trick Master</h3>
-        <p>Keep the ball in the air and land the tricks.</p>
+        <span class="pill"><i></i>New games on iPhone, iPad &amp; Android</span>
+        <h1>Small Games. <span>Big Fun.</span></h1>
+        <p class="lede"><strong>Quick challenges. Classic favorites. One more round.</strong></p>
+        <div class="hero-cta">
+          <a class="btn primary" href="#games">Play our games</a>
+          <a class="btn ghost" href="#trailers"><svg aria-hidden="true"><use href="#i-tri"/></svg>Watch trailers</a>
+        </div>
+        <ul class="hero-facts">
+          <li>Free to play</li>
+          <li>No account needed</li>
+          <li>Made by an indie studio</li>
+        </ul>
+      </div>
+      <div class="stage" aria-hidden="true">
+        <div class="ph"><div class="float phone" style="--pc:#ff3b6b"><img src="img/action/fail-b.jpg" alt="" width="540" height="802" fetchpriority="high"></div></div>
+        <div class="ph"><div class="float phone" style="--pc:#ffd21f"><img src="img/action/words-b.jpg" alt="" width="540" height="802" fetchpriority="high"></div></div>
+        <div class="ph"><div class="float phone" style="--pc:#35d0ff"><img src="img/action/euchre-b.jpg" alt="" width="540" height="802" fetchpriority="high"></div></div>
+        <img class="icon i1" src="img/rugby-icon.jpg" alt="" width="256" height="256">
+        <img class="icon i2" src="img/garbage-icon.jpg" alt="" width="256" height="256">
+        <img class="icon i3" src="img/poker-icon.webp" alt="" width="152" height="152">
+        <img class="icon i4" src="img/wordswitch-icon.jpg" alt="" width="152" height="152">
+        <div class="rays"></div>
+        <span class="spark" style="left:46%;top:4%">✦</span><span class="spark s2" style="left:8%;top:46%">✦</span><span class="spark s3" style="right:4%;top:44%">✦</span><span class="spark s2" style="left:58%;bottom:2%">✦</span>
       </div>
     </div>
   </section>
 
-  <section class="support wrap" id="support">
-    <h2>Support</h2>
+  <!-- PICKER -->
+  <nav class="picker wrap" aria-label="Jump to a game">
+    <ul>
+      <li><a href="#rocket-rugby" style="--c:#7dff3b"><img src="img/rugby-icon.jpg" alt="" width="256" height="256">Rocket Rugby</a></li>
+      <li><a href="#you-will-fail" style="--c:#ff3b8a"><img src="img/fail-icon.jpg" alt="" width="256" height="256">You Will Fail</a></li>
+      <li><a href="#garbage" style="--c:#2fd47a"><img src="img/garbage-icon.jpg" alt="" width="256" height="256">Garbage</a></li>
+      <li><a href="#euchre" style="--c:#3d7bff"><img src="img/euchre-icon.jpg" alt="" width="256" height="256">Euchre</a></li>
+      <li><a href="#word-switch" style="--c:#35c8ff"><img src="img/wordswitch-icon.jpg" alt="" width="152" height="152">Word Switch</a></li>
+      <li><a href="#poker" style="--c:#ff3b4e"><img src="img/poker-icon.webp" alt="" width="152" height="152">Home Poker</a></li>
+    </ul>
+  </nav>
+
+  <!-- GAMES -->
+  <section class="games wrap" id="games" aria-labelledby="games-h">
+    <div class="sec-head rv">
+      <h2 id="games-h">Pick your <em>game</em></h2>
+    </div>
+
+    <div class="spots">
+      <article class="spot g-rugby rv" id="rocket-rugby">
+        
+        <div class="info">
+          <img class="big-icon" src="img/rugby-icon.jpg" alt="Rocket Rugby app icon" width="256" height="256" loading="lazy">
+          <p class="kind">Sports</p>
+          <h3>Rocket Rugby<small>Kick &amp; Run</small></h3>
+          <p class="tag">Kick. Dodge. Score.</p>
+          <div class="stores">
+            <a class="badge" href="https://apps.apple.com/us/app/id6804029828" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-apple"/></svg><span><small>Download on the</small><strong>App Store</strong></span></a>
+            <a class="badge" href="https://play.google.com/store/apps/details?id=com.nico.rocketrugby" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-play"/></svg><span><small>GET IT ON</small><strong>Google Play</strong></span></a>
+          </div>
+          <a class="trailer-btn" href="https://www.youtube.com/watch?v=SgvB0huouUg" target="_blank" rel="noopener" data-yt="SgvB0huouUg" data-title="Rocket Rugby trailer"><svg aria-hidden="true"><use href="#i-tri"/></svg>Watch trailer</a>
+        </div>
+        <div class="art wide"><figure class="shot"><img src="img/action/rugby-a.jpg" alt="Running for the gold ball past the defenders" width="1200" height="594" loading="lazy"></figure><figure class="shot"><img src="img/action/rugby-c.jpg" alt="Goal kick sailing through the bullseye target" width="1200" height="594" loading="lazy"></figure><figure class="shot"><img src="img/action/rugby-d.jpg" alt="Charging down the field toward the try line" width="1200" height="594" loading="lazy"></figure></div>
+      </article>
+      <article class="spot g-fail rv" id="you-will-fail">
+        
+        <div class="info">
+          <img class="big-icon" src="img/fail-icon.jpg" alt="You Will Fail app icon" width="256" height="256" loading="lazy">
+          <p class="kind">Trivia</p>
+          <h3>You Will Fail<small>Brain Quiz Game</small></h3>
+          <p class="tag">Six questions. One ego.</p>
+          <div class="stores">
+            <a class="badge" href="https://apps.apple.com/us/app/id6804033648" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-apple"/></svg><span><small>Download on the</small><strong>App Store</strong></span></a>
+            <a class="badge" href="https://play.google.com/store/apps/details?id=com.Nico.youwillfail" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-play"/></svg><span><small>GET IT ON</small><strong>Google Play</strong></span></a>
+          </div>
+          <a class="trailer-btn" href="https://www.youtube.com/watch?v=hw-XDbHnJmM" target="_blank" rel="noopener" data-yt="hw-XDbHnJmM" data-title="You Will Fail trailer"><svg aria-hidden="true"><use href="#i-tri"/></svg>Watch trailer</a>
+        </div>
+        <div class="art"><figure class="shot"><img src="img/action/fail-a.jpg" alt="Ask the crowd on a US history question" width="540" height="802" loading="lazy"></figure><figure class="shot"><img src="img/action/fail-b.jpg" alt="Going all in on the wager before the final question" width="540" height="802" loading="lazy"></figure><figure class="shot"><img src="img/action/fail-d.jpg" alt="You Win screen after beating all six questions" width="540" height="802" loading="lazy"></figure></div>
+      </article>
+      <article class="spot g-garbage rv" id="garbage">
+        
+        <div class="info">
+          <img class="big-icon" src="img/garbage-icon.jpg" alt="Garbage app icon" width="256" height="256" loading="lazy">
+          <p class="kind">Card game</p>
+          <h3>Garbage<small>Classic Card Game</small></h3>
+          <p class="tag">Clear your board. Beat the bot.</p>
+          <div class="stores">
+            <a class="badge" href="https://apps.apple.com/us/app/id6804512415" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-apple"/></svg><span><small>Download on the</small><strong>App Store</strong></span></a>
+            <a class="badge" href="https://play.google.com/store/apps/details?id=com.nico.garbage" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-play"/></svg><span><small>GET IT ON</small><strong>Google Play</strong></span></a>
+          </div>
+          <a class="trailer-btn" href="https://www.youtube.com/watch?v=rjCD-EWtcu0" target="_blank" rel="noopener" data-yt="rjCD-EWtcu0" data-title="Garbage trailer"><svg aria-hidden="true"><use href="#i-tri"/></svg>Watch trailer</a>
+        </div>
+        <div class="art"><figure class="shot"><img src="img/action/garbage-a.jpg" alt="Wild Jokers dropping into the board" width="540" height="802" loading="lazy"></figure><figure class="shot"><img src="img/action/garbage-b.jpg" alt="Ace to King in Ultimate Garbage" width="540" height="802" loading="lazy"></figure><figure class="shot"><img src="img/action/garbage-c.jpg" alt="Red or Black house rules round" width="540" height="802" loading="lazy"></figure></div>
+      </article>
+      <article class="spot g-euchre rv" id="euchre">
+        <span class="ribbon">New</span>
+        <div class="info">
+          <img class="big-icon" src="img/euchre-icon.jpg" alt="Euchre app icon" width="256" height="256" loading="lazy">
+          <p class="kind">Card game</p>
+          <h3>Euchre<small>Classic &amp; House Rules</small></h3>
+          <p class="tag">Order it up. Go alone.</p>
+          <div class="stores">
+            <a class="badge" href="https://apps.apple.com/us/app/id6820276546" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-apple"/></svg><span><small>Download on the</small><strong>App Store</strong></span></a>
+            <a class="badge" href="https://play.google.com/store/apps/details?id=com.nico.euchre" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-play"/></svg><span><small>GET IT ON</small><strong>Google Play</strong></span></a>
+          </div>
+          <a class="trailer-btn" href="https://www.youtube.com/watch?v=WwFDd6zKf_8" target="_blank" rel="noopener" data-yt="WwFDd6zKf_8" data-title="Euchre trailer"><svg aria-hidden="true"><use href="#i-tri"/></svg>Watch trailer</a>
+        </div>
+        <div class="art"><figure class="shot"><img src="img/action/euchre-a.jpg" alt="Deciding whether to order up spades" width="540" height="802" loading="lazy"></figure><figure class="shot"><img src="img/action/euchre-b.jpg" alt="Euchred them for two points" width="540" height="802" loading="lazy"></figure><figure class="shot"><img src="img/action/euchre-c.jpg" alt="You Win, 5 to 1" width="540" height="802" loading="lazy"></figure></div>
+      </article>
+      <article class="spot g-words rv" id="word-switch">
+        <span class="ribbon">New</span>
+        <div class="info">
+          <img class="big-icon" src="img/wordswitch-icon.jpg" alt="Word Switch app icon" width="152" height="152" loading="lazy">
+          <p class="kind">Word puzzle</p>
+          <h3>Word Switch<small>Letter Puzzle</small></h3>
+          <p class="tag">Change one letter. Keep your streak.</p>
+          <div class="stores">
+            <span class="badge soon"><svg aria-hidden="true"><use href="#i-apple"/></svg><span><small>App Store</small><strong>Soon</strong></span></span>
+            <a class="badge" href="https://play.google.com/store/apps/details?id=com.NQJSGames.WordSwitch" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-play"/></svg><span><small>GET IT ON</small><strong>Google Play</strong></span></a>
+          </div>
+          <a class="trailer-btn" href="https://www.youtube.com/watch?v=TH0aQWligyI" target="_blank" rel="noopener" data-yt="TH0aQWligyI" data-title="Word Switch trailer"><svg aria-hidden="true"><use href="#i-tri"/></svg>Watch trailer</a>
+        </div>
+        <div class="art"><figure class="shot"><img src="img/action/words-a.jpg" alt="Turning WORK into HELD one letter at a time" width="540" height="802" loading="lazy"></figure><figure class="shot"><img src="img/action/words-b.jpg" alt="A perfect five-letter ladder from SWIFT to SLOPE" width="540" height="802" loading="lazy"></figure><figure class="shot"><img src="img/action/words-c.jpg" alt="Perfect! Three stars and bonus coins" width="540" height="802" loading="lazy"></figure></div>
+      </article>
+      <article class="spot g-poker rv" id="poker">
+        <span class="ribbon">New · 18+</span>
+        <div class="info">
+          <img class="big-icon" src="img/poker-icon.webp" alt="Dealer's Choice app icon" width="152" height="152" loading="lazy">
+          <p class="kind">Card game</p>
+          <h3>Dealer's Choice<small>Home Poker</small></h3>
+          <p class="tag">The dealer calls the game.</p>
+          <div class="stores">
+            <span class="badge soon"><svg aria-hidden="true"><use href="#i-apple"/></svg><span><small>App Store</small><strong>Soon</strong></span></span>
+            <a class="badge" href="https://play.google.com/store/apps/details?id=com.Nico.NicosPokerDealersChoice" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-play"/></svg><span><small>GET IT ON</small><strong>Google Play</strong></span></a>
+          </div>
+          <a class="trailer-btn" href="https://www.youtube.com/watch?v=rYpqUvBNhjU" target="_blank" rel="noopener" data-yt="rYpqUvBNhjU" data-title="Dealer's Choice trailer"><svg aria-hidden="true"><use href="#i-tri"/></svg>Watch trailer</a>
+        </div>
+        <div class="art wide"><figure class="shot"><img src="img/action/poker-a.jpg" alt="3-9-3: everyone shows at once" width="1200" height="594" loading="lazy"></figure><figure class="shot"><img src="img/action/poker-b.jpg" alt="Seven-card No Peek, beat the leader" width="1200" height="594" loading="lazy"></figure><figure class="shot"><img src="img/action/poker-c.jpg" alt="Full House with up to 7 players" width="1200" height="594" loading="lazy"></figure></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- TRAILERS -->
+  <section class="trailers wrap" id="trailers" aria-labelledby="tr-h">
+    <div class="sec-head rv">
+      <h2 id="tr-h">See them <em>in action</em></h2>
+      <p>Tap to play.</p>
+    </div>
+    <div class="reel">
+      <a class="rv" href="https://www.youtube.com/watch?v=SgvB0huouUg" target="_blank" rel="noopener" data-yt="SgvB0huouUg" data-title="Rocket Rugby trailer" style="--c:#8dff3b"><img src="img/action/rugby-a.jpg" alt="" width="1200" height="594" loading="lazy"><span class="play"><svg aria-hidden="true"><use href="#i-tri"/></svg></span><span class="cap"><b>Rocket Rugby</b></span></a>
+      <a class="rv" href="https://www.youtube.com/watch?v=hw-XDbHnJmM" target="_blank" rel="noopener" data-yt="hw-XDbHnJmM" data-title="You Will Fail trailer" style="--c:#ff3b5c"><img src="img/action/fail-b.jpg" alt="" width="540" height="802" loading="lazy"><span class="play"><svg aria-hidden="true"><use href="#i-tri"/></svg></span><span class="cap"><b>You Will Fail</b></span></a>
+      <a class="rv" href="https://www.youtube.com/watch?v=rjCD-EWtcu0" target="_blank" rel="noopener" data-yt="rjCD-EWtcu0" data-title="Garbage trailer" style="--c:#f0c24f"><img src="img/action/garbage-a.jpg" alt="" width="540" height="802" loading="lazy"><span class="play"><svg aria-hidden="true"><use href="#i-tri"/></svg></span><span class="cap"><b>Garbage</b></span></a>
+      <a class="rv" href="https://www.youtube.com/watch?v=WwFDd6zKf_8" target="_blank" rel="noopener" data-yt="WwFDd6zKf_8" data-title="Euchre trailer" style="--c:#f2cd6b"><img src="img/action/euchre-b.jpg" alt="" width="540" height="802" loading="lazy"><span class="play"><svg aria-hidden="true"><use href="#i-tri"/></svg></span><span class="cap"><b>Euchre</b></span></a>
+      <a class="rv" href="https://www.youtube.com/watch?v=TH0aQWligyI" target="_blank" rel="noopener" data-yt="TH0aQWligyI" data-title="Word Switch trailer" style="--c:#ffd23f"><img src="img/action/words-b.jpg" alt="" width="540" height="802" loading="lazy"><span class="play"><svg aria-hidden="true"><use href="#i-tri"/></svg></span><span class="cap"><b>Word Switch</b></span></a>
+      <a class="rv" href="https://www.youtube.com/watch?v=rYpqUvBNhjU" target="_blank" rel="noopener" data-yt="rYpqUvBNhjU" data-title="Dealer's Choice: Home Poker trailer" style="--c:#f5c542"><img src="img/action/poker-b.jpg" alt="" width="1200" height="594" loading="lazy"><span class="play"><svg aria-hidden="true"><use href="#i-tri"/></svg></span><span class="cap"><b>Home Poker</b></span></a>
+    </div>
+    <p class="yt-more rv"><a class="btn ghost" href="https://www.youtube.com/@NQJSstudio" target="_blank" rel="noopener"><svg aria-hidden="true" style="color:#ff4e45"><use href="#i-yt"/></svg>More on our YouTube channel</a></p>
+  </section>
+
+  <!-- COMING SOON -->
+  <section class="soon wrap" id="coming-soon" aria-labelledby="soon-h">
+    <div class="sec-head rv"><h2 id="soon-h">Coming <em>soon</em></h2></div>
+    <div class="soon-grid">
+      <div class="soon-card rv" style="--a:#0e5a7a;--b:#0a2a3f">
+        <div class="ico" aria-hidden="true"><svg viewBox="0 0 48 48"><path fill="#ffc93c" d="M6 18h36v20a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4z"/><path fill="#ff7a2f" d="M4 14a2 2 0 0 1 2-2h36a2 2 0 0 1 2 2v6H4z"/><path fill="#fff" d="M18 8h12v4h-3V10h-6v2h-3z"/><path fill="#35d0ff" d="M14 26c4-3 9-3 13 0-4 3-9 3-13 0zm13 0 4-3v6z"/></svg></div>
+        <div><h3>Tackle Box Sort</h3><p>Sort the lures. Catch the fish.</p><span class="when">In testing</span></div><div class="soon-shots"><img src="img/action/tackle-a.jpg" alt="Sorted! A finished tackle box" width="540" height="802" loading="lazy"><img src="img/action/tackle-b.jpg" alt="Trophy catch: a jumping bass" width="540" height="802" loading="lazy"><img src="img/action/tackle-c.jpg" alt="Golden trout trophy catch" width="540" height="802" loading="lazy"></div>
+      </div>
+      <div class="soon-card rv" style="--a:#1d6b2a;--b:#0b2a12">
+        <div class="ico" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="22" r="14" fill="#fff"/><path fill="#10172c" d="m24 14 6 4.5-2.3 7h-7.4l-2.3-7zM12.5 20.5l4 .8 2 6-2.8 3.5-3.6-1.4A14 14 0 0 1 12.5 20.5zm23 0a14 14 0 0 1 .4 8.9l-3.6 1.4-2.8-3.5 2-6zM19 33.5l2.2-3h5.6l2.2 3a14 14 0 0 1-10 0z"/><ellipse cx="24" cy="43" rx="10" ry="2.5" fill="rgba(0,0,0,.35)"/></svg></div>
+        <div><h3>Soccer Juggling: Trick Master</h3><p>Keep the ball in the air and land the tricks.</p><span class="when">Coming soon</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUPPORT -->
+  <section class="support wrap" id="support" aria-labelledby="sup-h">
+    <div class="sec-head rv"><h2 id="sup-h">Support</h2></div>
     <div class="support-grid">
-      <div>
+      <div class="box rv" style="--k:var(--sky)">
+        <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm1 2.4V17h16V7.4l-8 5.3z M5.2 7l6.8 4.5L18.8 7z"/></svg></div>
         <h3>Get help</h3>
         <p>Found a bug or have an idea? Email us and say which game and phone you're using.</p>
         <div class="email"><code id="support-email">NQJS.support@gmail.com</code><button class="copy" id="copy-email" type="button">Copy</button></div>
       </div>
-      <div>
+      <div class="box rv" style="--k:#8dff3b">
+        <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5zm-1.2 14.2-3.5-3.5 1.4-1.4 2.1 2.1 4.9-4.9 1.4 1.4z"/></svg></div>
         <h3>Your data</h3>
         <p>No accounts. Your progress stays on your device. Optional ads give in-game rewards. <a href="nqjs-privacy-policy/">Privacy Policy</a> · <a href="nqjs-privacy-policy/terms.html">Terms</a></p>
       </div>
-      <div>
+      <div class="box rv" style="--k:var(--sun)">
+        <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path fill="currentColor" d="m12 2.8 2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z"/></svg></div>
         <h3>Like a game?</h3>
         <p>A quick rating on the App Store or Google Play is the biggest help a small studio can get. Thank you.</p>
       </div>
@@ -388,28 +718,76 @@ footer a { color: var(--chalk-dim); }
   </section>
 </main>
 
-<footer class="wrap">
-  <span>© 2026 NQJS Studio</span>
-  <span><a href="nqjs-privacy-policy/">Privacy</a> · <a href="nqjs-privacy-policy/terms.html">Terms</a> · <a href="#support">Support</a> · <a href="https://www.youtube.com/@NQJSstudio" target="_blank" rel="noopener">YouTube</a></span>
+<footer>
+  <div class="wrap">
+    <span>© 2026 NQJS Studio</span>
+    <nav aria-label="Footer">
+      <a href="nqjs-privacy-policy/">Privacy</a>
+      <a href="nqjs-privacy-policy/terms.html">Terms</a>
+      <a href="#support">Support</a>
+      <a href="https://www.youtube.com/@NQJSstudio" target="_blank" rel="noopener">YouTube</a>
+    </nav>
+  </div>
 </footer>
+
+<dialog class="vid" id="vid" aria-label="Trailer">
+  <div class="frame" id="vid-frame"></div>
+  <div class="bar"><a id="vid-link" href="https://www.youtube.com/@NQJSstudio" target="_blank" rel="noopener">Open on YouTube</a><button class="x" id="vid-close" type="button">Close</button></div>
+</dialog>
 
 <script>
 (function () {
+  document.documentElement.classList.add('js');
+
+  // Copy support email
   var btn = document.getElementById('copy-email');
   var addr = document.getElementById('support-email');
-  if (!btn || !addr) return;
-  btn.addEventListener('click', function () {
+  if (btn && addr) btn.addEventListener('click', function () {
     var text = addr.textContent.trim();
     function selectIt() {
       var r = document.createRange(); r.selectNodeContents(addr);
       var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
       btn.textContent = 'Selected';
     }
-    try {
-      navigator.clipboard.writeText(text).then(function () { btn.textContent = 'Copied'; }, selectIt);
-    } catch (e) { selectIt(); }
+    try { navigator.clipboard.writeText(text).then(function () { btn.textContent = 'Copied'; }, selectIt); }
+    catch (e) { selectIt(); }
     setTimeout(function () { btn.textContent = 'Copy'; }, 2000);
   });
+
+  // Scroll reveal
+  var items = document.querySelectorAll('.rv');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    items.forEach(function (el) { io.observe(el); });
+  } else { items.forEach(function (el) { el.classList.add('in'); }); }
+
+  // Trailers play in a pop-up; without JS (or without <dialog>) the links open YouTube.
+  var dlg = document.getElementById('vid');
+  var frame = document.getElementById('vid-frame');
+  var link = document.getElementById('vid-link');
+  if (!dlg || typeof dlg.showModal !== 'function') return;
+  function close() { frame.innerHTML = ''; if (dlg.open) dlg.close(); }
+  document.querySelectorAll('[data-yt]').forEach(function (a) {
+    a.addEventListener('click', function (ev) {
+      if (ev.metaKey || ev.ctrlKey || ev.shiftKey) return;
+      ev.preventDefault();
+      var id = a.getAttribute('data-yt');
+      var f = document.createElement('iframe');
+      f.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
+      f.title = a.getAttribute('data-title') || 'Trailer';
+      f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      f.allowFullscreen = true;
+      frame.innerHTML = ''; frame.appendChild(f);
+      link.href = 'https://www.youtube.com/watch?v=' + id;
+      dlg.showModal();
+      document.getElementById('vid-close').focus();
+    });
+  });
+  document.getElementById('vid-close').addEventListener('click', close);
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); });
+  dlg.addEventListener('close', function () { frame.innerHTML = ''; });
 })();
 </script>
 </body>
