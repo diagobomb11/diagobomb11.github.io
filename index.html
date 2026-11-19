@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>NQJS Studio · Small Games. Big Fun.</title>
-<meta name="description" content="NQJS Studio makes Rocket Rugby, You Will Fail, Garbage, Euchre, Word Switch and Dealer's Choice: Home Poker for iPhone, iPad and Android. Small games, big fun.">
+<meta name="description" content="NQJS Studio makes Rocket Rugby, You Will Fail, Garbage, Euchre, Word Switch, Soccer Juggling and Dealer's Choice: Home Poker for iPhone, iPad and Android. Small games, big fun.">
 <meta name="theme-color" content="#0a0f1f">
 <meta property="og:type" content="website">
 <meta property="og:title" content="NQJS Studio · Small Games. Big Fun.">
@@ -125,7 +125,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--sky); outline-o
 
 /* ---------- Game picker strip ---------- */
 .picker { padding-block: 10px 30px; }
-.picker ul { list-style: none; margin: 0; padding: 4px 2px 10px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; }
+.picker ul { list-style: none; margin: 0; padding: 4px 2px 10px; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 12px; }
 .picker a { display: grid; justify-items: center; gap: 9px; padding: 16px 8px 14px; border-radius: 22px; text-decoration: none; color: var(--ink); font-weight: 700; font-size: .9rem; text-align: center; line-height: 1.2; background: var(--bg-2); border: 1px solid var(--line); transition: transform .2s ease, border-color .2s, background-color .2s; }
 .picker a:hover { transform: translateY(-4px); border-color: var(--c, var(--sky)); background: color-mix(in srgb, var(--c, var(--sky)) 12%, var(--bg-2)); }
 .picker img { width: 72px; height: 72px; border-radius: 18px; box-shadow: 0 10px 20px -10px #000; }
@@ -408,6 +408,7 @@ body {
 .g-garbage{ --a: #23a95e; --b: #0c5a32; --c: #ffd44f; --pattern: radial-gradient(circle at 20% 20%, rgba(255,255,255,.09) 1.2px, transparent 1.8px) 0 0/22px 22px; }
 .g-euchre { --a: #2f62ff; --b: #13289a; --c: #ffd86b; --pattern: radial-gradient(circle at 20% 20%, rgba(255,255,255,.09) 1.2px, transparent 1.8px) 0 0/22px 22px; }
 .g-words  { --a: #4cc3ff; --b: #1e63e6; --c: #ffe03a; --pattern: radial-gradient(50% 60% at 15% 0%, rgba(255,255,255,.35), transparent 70%); }
+.g-soccer { --a: #12c2a0; --b: #08606e; --c: #ffcf26; --pattern: repeating-linear-gradient(90deg, transparent 0 70px, rgba(255,255,255,.07) 70px 140px); }
 .g-poker  { --a: #e5163a; --b: #6b0a1c; --c: #ffcf3f; --pattern: radial-gradient(circle at 20% 20%, rgba(255,255,255,.09) 1.2px, transparent 1.8px) 0 0/22px 22px; }
 
 /* trailers on a bright band */
@@ -466,7 +467,7 @@ footer { border-top: 2px solid rgba(53,208,255,.35); background: #081238; }
 .stage .phone img { aspect-ratio: 540 / 802; }
 .reel .cap b { font-size: 1.6rem; }
 .soon-card { flex-wrap: wrap; }
-.soon-grid { align-items: start; }
+.soon-grid { align-items: start; grid-template-columns: minmax(0, 1fr); max-width: 640px; }
 .soon-shots { display: flex; gap: 10px; width: 100%; }
 .soon-shots img { flex: 1 1 0; min-width: 0; border-radius: 14px; aspect-ratio: 540/802; object-fit: cover; box-shadow: 0 0 0 3px #fff, 0 10px 20px -10px #000; }
 @media (max-width: 960px) {
@@ -558,6 +559,7 @@ footer { border-top: 2px solid rgba(53,208,255,.35); background: #081238; }
       <li><a href="#garbage" style="--c:#2fd47a"><img src="img/garbage-icon.jpg" alt="" width="256" height="256">Garbage</a></li>
       <li><a href="#euchre" style="--c:#3d7bff"><img src="img/euchre-icon.jpg" alt="" width="256" height="256">Euchre</a></li>
       <li><a href="#word-switch" style="--c:#35c8ff"><img src="img/wordswitch-icon.jpg" alt="" width="152" height="152">Word Switch</a></li>
+      <li><a href="#soccer-juggling" style="--c:#ffcf26"><img src="img/soccer-icon.jpg" alt="" width="256" height="256">Soccer Juggling</a></li>
       <li><a href="#poker" style="--c:#ff3b4e"><img src="img/poker-icon.webp" alt="" width="152" height="152">Home Poker</a></li>
     </ul>
   </nav>
@@ -644,6 +646,20 @@ footer { border-top: 2px solid rgba(53,208,255,.35); background: #081238; }
         </div>
         <div class="art"><figure class="shot"><img src="img/action/words-a.jpg" alt="Turning WORK into HELD one letter at a time" width="540" height="802" loading="lazy"></figure><figure class="shot"><img src="img/action/words-b.jpg" alt="A perfect five-letter ladder from SWIFT to SLOPE" width="540" height="802" loading="lazy"></figure><figure class="shot"><img src="img/action/words-c.jpg" alt="Perfect! Three stars and bonus coins" width="540" height="802" loading="lazy"></figure></div>
       </article>
+      <article class="spot g-soccer rv" id="soccer-juggling">
+        <span class="ribbon">New</span>
+        <div class="info">
+          <img class="big-icon" src="img/soccer-icon.jpg" alt="Soccer Juggling app icon" width="256" height="256" loading="lazy">
+          <p class="kind">Sports</p>
+          <h3>Soccer Juggling<small>Trick Master</small></h3>
+          <p class="tag">Keep it up. Land the tricks.</p>
+          <div class="stores">
+            <span class="badge soon"><svg aria-hidden="true"><use href="#i-apple"/></svg><span><small>App Store</small><strong>Soon</strong></span></span>
+            <a class="badge" href="https://play.google.com/store/apps/details?id=com.nqjs.soccerjugglingtrickmaster" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-play"/></svg><span><small>GET IT ON</small><strong>Google Play</strong></span></a>
+          </div>
+        </div>
+        <div class="art"><figure class="shot"><img src="img/action/soccer-a.jpg" alt="Mission complete: juggling in the stadium" width="540" height="802" loading="lazy"></figure><figure class="shot"><img src="img/action/soccer-b.jpg" alt="Low-gravity juggling on the Moon" width="540" height="802" loading="lazy"></figure><figure class="shot"><img src="img/action/soccer-c.jpg" alt="Keeping it up on snowy Storm Peak" width="540" height="802" loading="lazy"></figure></div>
+      </article>
       <article class="spot g-poker rv" id="poker">
         <span class="ribbon">New · 18+</span>
         <div class="info">
@@ -686,10 +702,6 @@ footer { border-top: 2px solid rgba(53,208,255,.35); background: #081238; }
       <div class="soon-card rv" style="--a:#0e5a7a;--b:#0a2a3f">
         <div class="ico" aria-hidden="true"><svg viewBox="0 0 48 48"><path fill="#ffc93c" d="M6 18h36v20a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4z"/><path fill="#ff7a2f" d="M4 14a2 2 0 0 1 2-2h36a2 2 0 0 1 2 2v6H4z"/><path fill="#fff" d="M18 8h12v4h-3V10h-6v2h-3z"/><path fill="#35d0ff" d="M14 26c4-3 9-3 13 0-4 3-9 3-13 0zm13 0 4-3v6z"/></svg></div>
         <div><h3>Tackle Box Sort</h3><p>Sort the lures. Catch the fish.</p><span class="when">In testing</span></div><div class="soon-shots"><img src="img/action/tackle-a.jpg" alt="Sorted! A finished tackle box" width="540" height="802" loading="lazy"><img src="img/action/tackle-b.jpg" alt="Trophy catch: a jumping bass" width="540" height="802" loading="lazy"><img src="img/action/tackle-c.jpg" alt="Golden trout trophy catch" width="540" height="802" loading="lazy"></div>
-      </div>
-      <div class="soon-card rv" style="--a:#1d6b2a;--b:#0b2a12">
-        <div class="ico" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="22" r="14" fill="#fff"/><path fill="#10172c" d="m24 14 6 4.5-2.3 7h-7.4l-2.3-7zM12.5 20.5l4 .8 2 6-2.8 3.5-3.6-1.4A14 14 0 0 1 12.5 20.5zm23 0a14 14 0 0 1 .4 8.9l-3.6 1.4-2.8-3.5 2-6zM19 33.5l2.2-3h5.6l2.2 3a14 14 0 0 1-10 0z"/><ellipse cx="24" cy="43" rx="10" ry="2.5" fill="rgba(0,0,0,.35)"/></svg></div>
-        <div><h3>Soccer Juggling: Trick Master</h3><p>Keep the ball in the air and land the tricks.</p><span class="when">Coming soon</span></div>
       </div>
     </div>
   </section>
